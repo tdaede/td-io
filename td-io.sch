@@ -647,132 +647,6 @@ Wire Wire Line
 	1150 8850 1000 8850
 Connection ~ 15050 1400
 $Comp
-L Connector:DB15_Male_HighDensity J5
-U 1 1 6009D527
-P 4900 6550
-F 0 "J5" H 4900 7417 50  0000 C CNN
-F 1 "DB15_Male_HighDensity" H 4900 7326 50  0000 C CNN
-F 2 "Connector_Dsub:DSUB-15-HD_Male_Horizontal_P2.29x1.98mm_EdgePinOffset3.03mm_Housed_MountingHolesOffset4.94mm" H 3950 6950 50  0001 C CNN
-F 3 " ~" H 3950 6950 50  0001 C CNN
-	1    4900 6550
-	1    0    0    -1  
-$EndComp
-$Comp
-L Memory_EEPROM:AT24CS01-SSHM U5
-U 1 1 600A0D28
-P 6100 6450
-F 0 "U5" H 6200 6900 50  0000 C CNN
-F 1 "AD813" H 6500 6750 50  0000 C CNN
-F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 6100 6450 50  0001 C CNN
-F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-8815-SEEPROM-AT24CS01-02-Datasheet.pdf" H 6100 6450 50  0001 C CNN
-	1    6100 6450
-	1    0    0    -1  
-$EndComp
-Text Label 4600 6850 2    50   ~ 0
-vga_red
-Text Label 4600 6650 2    50   ~ 0
-vga_green
-Text Label 4600 6450 2    50   ~ 0
-vga_blue
-Text Label 5200 6450 0    50   ~ 0
-vga_hsync
-Text Notes 4500 7300 0    50   ~ 0
-todo switch to female
-$Comp
-L power:GND #PWR0124
-U 1 1 600A33F9
-P 6100 6900
-F 0 "#PWR0124" H 6100 6650 50  0001 C CNN
-F 1 "GND" H 6105 6727 50  0000 C CNN
-F 2 "" H 6100 6900 50  0001 C CNN
-F 3 "" H 6100 6900 50  0001 C CNN
-	1    6100 6900
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	6100 6750 6100 6850
-Wire Wire Line
-	6100 6750 5650 6750
-Wire Wire Line
-	5650 6750 5650 6550
-Wire Wire Line
-	5650 6550 5700 6550
-Connection ~ 6100 6750
-Wire Wire Line
-	5650 6550 5650 6450
-Wire Wire Line
-	5650 6450 5700 6450
-Connection ~ 5650 6550
-Wire Wire Line
-	5650 6450 5650 6350
-Wire Wire Line
-	5650 6350 5700 6350
-Connection ~ 5650 6450
-$Comp
-L power:GND #PWR0125
-U 1 1 600AC403
-P 4150 6150
-F 0 "#PWR0125" H 4150 5900 50  0001 C CNN
-F 1 "GND" H 4155 5977 50  0000 C CNN
-F 2 "" H 4150 6150 50  0001 C CNN
-F 3 "" H 4150 6150 50  0001 C CNN
-	1    4150 6150
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	4150 6150 4250 6150
-Wire Wire Line
-	4250 6150 4250 6550
-Wire Wire Line
-	4250 6750 4600 6750
-Connection ~ 4250 6150
-Wire Wire Line
-	4250 6150 4600 6150
-Wire Wire Line
-	4600 6950 4250 6950
-Wire Wire Line
-	4250 6950 4250 6750
-Connection ~ 4250 6750
-Wire Wire Line
-	4600 6550 4250 6550
-Connection ~ 4250 6550
-Wire Wire Line
-	4250 6550 4250 6750
-Wire Wire Line
-	4600 6050 4250 6050
-Wire Wire Line
-	4250 6050 4250 6150
-Wire Wire Line
-	4600 6350 4350 6350
-Wire Wire Line
-	4350 6350 4350 5500
-Wire Wire Line
-	4350 5500 6100 5500
-Wire Wire Line
-	6100 5500 6100 6150
-Wire Wire Line
-	5200 6050 6600 6050
-Wire Wire Line
-	6600 6050 6600 6450
-Wire Wire Line
-	6600 6450 6500 6450
-Wire Wire Line
-	5200 6650 5550 6650
-Wire Wire Line
-	5550 6650 5550 7250
-Wire Wire Line
-	5550 7250 6650 7250
-Wire Wire Line
-	6650 7250 6650 6350
-Wire Wire Line
-	6650 6350 6500 6350
-Wire Wire Line
-	6100 6750 6500 6750
-Wire Wire Line
-	6500 6750 6500 6550
-NoConn ~ 4600 6250
-NoConn ~ 5200 6250
-$Comp
 L Amplifier_Video:AD813 U3
 U 1 1 600EAC98
 P 8100 5900
@@ -816,29 +690,6 @@ F 3 "" H 5700 9050 50  0001 C CNN
 	1    5700 9050
 	1    0    0    -1  
 $EndComp
-$Comp
-L Device:C C7
-U 1 1 60034C1D
-P 6850 6450
-F 0 "C7" H 6965 6496 50  0000 L CNN
-F 1 "0.1uF" H 6965 6405 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0805_2012Metric" H 6888 6300 50  0001 C CNN
-F 3 "~" H 6850 6450 50  0001 C CNN
-	1    6850 6450
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	6850 6300 6850 5500
-Wire Wire Line
-	6850 5500 6100 5500
-Connection ~ 6100 5500
-Wire Wire Line
-	6100 6850 6850 6850
-Wire Wire Line
-	6850 6850 6850 6600
-Connection ~ 6100 6850
-Wire Wire Line
-	6100 6850 6100 6900
 $Comp
 L Device:C C6
 U 1 1 6003DC84
@@ -1599,8 +1450,6 @@ Text Label 5550 10150 2    50   ~ 0
 vga_hsync
 Text Label 5550 10350 2    50   ~ 0
 vga_vsync
-Text Label 5200 6850 0    50   ~ 0
-vga_vsync
 $Comp
 L Device:R R6
 U 1 1 601DED55
@@ -1789,17 +1638,6 @@ Wire Wire Line
 Wire Wire Line
 	14250 2800 14250 2500
 Connection ~ 14250 2500
-$Comp
-L power:PWR_FLAG #FLG0101
-U 1 1 602B1EF0
-P 6100 5500
-F 0 "#FLG0101" H 6100 5575 50  0001 C CNN
-F 1 "PWR_FLAG" H 6100 5673 50  0000 C CNN
-F 2 "" H 6100 5500 50  0001 C CNN
-F 3 "~" H 6100 5500 50  0001 C CNN
-	1    6100 5500
-	1    0    0    -1  
-$EndComp
 $Comp
 L MCU_RaspberryPi_and_Boards:Pico U10
 U 1 1 601A0730
@@ -2374,4 +2212,161 @@ Wire Wire Line
 Wire Wire Line
 	9950 6900 9950 6800
 Connection ~ 9950 6900
+$Comp
+L Connector:DB15_Female_HighDensity J5
+U 1 1 607A4CC7
+P 5050 6700
+F 0 "J5" H 5050 7567 50  0000 C CNN
+F 1 "DB15_Female_HighDensity" H 5050 7476 50  0000 C CNN
+F 2 "Connector_Dsub:DSUB-15-HD_Female_Horizontal_P2.29x1.98mm_EdgePinOffset3.03mm_Housed_MountingHolesOffset4.94mm" H 4100 7100 50  0001 C CNN
+F 3 " ~" H 4100 7100 50  0001 C CNN
+	1    5050 6700
+	1    0    0    -1  
+$EndComp
+$Comp
+L Memory_EEPROM:AT24CS01-SSHM U5
+U 1 1 607C39AA
+P 6200 6700
+F 0 "U5" H 6300 7150 50  0000 C CNN
+F 1 "AD813" H 6600 7000 50  0000 C CNN
+F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 6200 6700 50  0001 C CNN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-8815-SEEPROM-AT24CS01-02-Datasheet.pdf" H 6200 6700 50  0001 C CNN
+	1    6200 6700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5350 7100 6800 7100
+Wire Wire Line
+	6800 7100 6800 6700
+Wire Wire Line
+	6800 6700 6600 6700
+$Comp
+L power:GND #PWR02
+U 1 1 607D8BDF
+P 6200 7200
+F 0 "#PWR02" H 6200 6950 50  0001 C CNN
+F 1 "GND" H 6205 7027 50  0000 C CNN
+F 2 "" H 6200 7200 50  0001 C CNN
+F 3 "" H 6200 7200 50  0001 C CNN
+	1    6200 7200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6200 7200 6200 7150
+Wire Wire Line
+	6600 6800 6600 7000
+Wire Wire Line
+	6600 7000 6200 7000
+Connection ~ 6200 7000
+Wire Wire Line
+	6200 7000 5800 7000
+Wire Wire Line
+	5800 7000 5800 6800
+Wire Wire Line
+	5800 6800 5800 6700
+Connection ~ 5800 6800
+Wire Wire Line
+	5800 6700 5800 6600
+Connection ~ 5800 6700
+Wire Wire Line
+	6600 6600 6800 6600
+Wire Wire Line
+	6800 6600 6800 6350
+Wire Wire Line
+	6800 6350 5600 6350
+Wire Wire Line
+	5600 6350 5600 6500
+Wire Wire Line
+	5600 6500 5350 6500
+$Comp
+L power:PWR_FLAG #FLG01
+U 1 1 60855E9C
+P 6200 5850
+F 0 "#FLG01" H 6200 5925 50  0001 C CNN
+F 1 "PWR_FLAG" H 6200 6023 50  0000 C CNN
+F 2 "" H 6200 5850 50  0001 C CNN
+F 3 "~" H 6200 5850 50  0001 C CNN
+	1    6200 5850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6200 6400 6200 6000
+Wire Wire Line
+	4750 6800 4350 6800
+Wire Wire Line
+	4350 6800 4350 6000
+Wire Wire Line
+	4350 6000 6200 6000
+Connection ~ 6200 6000
+Wire Wire Line
+	6200 6000 6200 5850
+Text Label 5350 6700 0    50   ~ 0
+vga_hsync
+Text Label 5350 6300 0    50   ~ 0
+vga_vsync
+Text Label 4750 6700 2    50   ~ 0
+vga_blue
+Text Label 4750 6500 2    50   ~ 0
+vga_green
+Text Label 4750 6300 2    50   ~ 0
+vga_red
+$Comp
+L power:GND #PWR01
+U 1 1 608837A8
+P 4250 7250
+F 0 "#PWR01" H 4250 7000 50  0001 C CNN
+F 1 "GND" H 4255 7077 50  0000 C CNN
+F 2 "" H 4250 7250 50  0001 C CNN
+F 3 "" H 4250 7250 50  0001 C CNN
+	1    4250 7250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4750 7100 4250 7100
+Wire Wire Line
+	4250 7100 4250 7250
+Wire Wire Line
+	4750 6200 4250 6200
+Wire Wire Line
+	4250 6200 4250 6400
+Connection ~ 4250 7100
+Wire Wire Line
+	4750 7000 4250 7000
+Connection ~ 4250 7000
+Wire Wire Line
+	4250 7000 4250 7100
+Wire Wire Line
+	4750 6600 4250 6600
+Connection ~ 4250 6600
+Wire Wire Line
+	4250 6600 4250 7000
+Wire Wire Line
+	4750 6400 4250 6400
+Connection ~ 4250 6400
+Wire Wire Line
+	4250 6400 4250 6600
+NoConn ~ 4750 6900
+NoConn ~ 5350 6900
+$Comp
+L Device:C C7
+U 1 1 6092E164
+P 7100 6600
+F 0 "C7" H 7215 6646 50  0000 L CNN
+F 1 "0.1uF" H 7215 6555 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 7138 6450 50  0001 C CNN
+F 3 "~" H 7100 6600 50  0001 C CNN
+	1    7100 6600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6200 7150 7100 7150
+Wire Wire Line
+	7100 7150 7100 6750
+Connection ~ 6200 7150
+Wire Wire Line
+	6200 7150 6200 7000
+Wire Wire Line
+	7100 6450 7100 6000
+Wire Wire Line
+	7100 6000 6200 6000
 $EndSCHEMATC
