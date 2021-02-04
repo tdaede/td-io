@@ -620,31 +620,16 @@ speaker-
 Text Label 1350 2050 2    50   ~ 0
 speaker+
 $Comp
-L Connector:AudioJack3 J4
-U 1 1 6008792C
-P 800 8750
-F 0 "J4" H 782 9075 50  0000 C CNN
-F 1 "AudioJack3" H 782 8984 50  0000 C CNN
-F 2 "Connector_Audio:Jack_3.5mm_CUI_SJ-3523-SMT_Horizontal" H 800 8750 50  0001 C CNN
-F 3 "~" H 800 8750 50  0001 C CNN
-	1    800  8750
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	1000 8650 1300 8650
-$Comp
 L power:GND #PWR0123
 U 1 1 6008B983
-P 1150 8850
-F 0 "#PWR0123" H 1150 8600 50  0001 C CNN
-F 1 "GND" H 1155 8677 50  0000 C CNN
-F 2 "" H 1150 8850 50  0001 C CNN
-F 3 "" H 1150 8850 50  0001 C CNN
-	1    1150 8850
+P 1150 9200
+F 0 "#PWR0123" H 1150 8950 50  0001 C CNN
+F 1 "GND" H 1155 9027 50  0000 C CNN
+F 2 "" H 1150 9200 50  0001 C CNN
+F 3 "" H 1150 9200 50  0001 C CNN
+	1    1150 9200
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	1150 8850 1000 8850
 Connection ~ 15050 1400
 $Comp
 L Amplifier_Video:AD813 U3
@@ -1098,7 +1083,7 @@ F 4 "SL44-E3/57TGICT-ND" V 13050 3000 50  0001 C CNN "Digikey"
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	13050 2700 13050 2850
+	13050 2700 13050 2750
 Wire Wire Line
 	12400 2500 12750 2500
 $Comp
@@ -1250,8 +1235,6 @@ F 4 "2312-H-RC" V 13650 2200 50  0001 C CNN "Digikey"
 	1    13650 2200
 	0    -1   -1   0   
 $EndComp
-Wire Wire Line
-	13050 2200 13500 2200
 Connection ~ 13050 2200
 Wire Wire Line
 	13050 2200 13050 2300
@@ -1804,7 +1787,7 @@ U 1 1 601ED35D
 P 5150 4250
 F 0 "J7" H 5200 5267 50  0000 C CNN
 F 1 "Conn_02x17_Odd_Even" H 5200 5176 50  0000 C CNN
-F 2 "td-io:DF1BZ-34DP-2.5DSA" H 5150 4250 50  0001 C CNN
+F 2 "td-io:DF1BZ-34DP-2.5DS" H 5150 4250 50  0001 C CNN
 F 3 "~" H 5150 4250 50  0001 C CNN
 	1    5150 4250
 	1    0    0    -1  
@@ -1949,10 +1932,6 @@ F 3 "~" H 1450 9050 50  0001 C CNN
 	1    1450 9050
 	0    1    1    0   
 $EndComp
-Wire Wire Line
-	1000 8750 1300 8750
-Wire Wire Line
-	1300 8750 1300 9050
 $Comp
 L Device:R R25
 U 1 1 6041448D
@@ -2369,4 +2348,46 @@ Wire Wire Line
 	7100 6450 7100 6000
 Wire Wire Line
 	7100 6000 6200 6000
+$Comp
+L Connector:Conn_Coaxial J4
+U 1 1 6022183D
+P 650 8650
+F 0 "J4" H 750 8532 50  0000 L CNN
+F 1 "Conn_Coaxial" H 750 8623 50  0000 L CNN
+F 2 "td-io:CUI_RCJ-01X" H 650 8650 50  0001 C CNN
+F 3 " ~" H 650 8650 50  0001 C CNN
+	1    650  8650
+	-1   0    0    1   
+$EndComp
+$Comp
+L Connector:Conn_Coaxial J8
+U 1 1 60222C27
+P 650 9050
+F 0 "J8" H 750 8932 50  0000 L CNN
+F 1 "Conn_Coaxial" H 750 9023 50  0000 L CNN
+F 2 "td-io:CUI_RCJ-01X" H 650 9050 50  0001 C CNN
+F 3 " ~" H 650 9050 50  0001 C CNN
+	1    650  9050
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	850  8650 1300 8650
+Wire Wire Line
+	1300 9050 850  9050
+Wire Wire Line
+	1150 9200 1150 8850
+Wire Wire Line
+	1150 8850 650  8850
+Wire Wire Line
+	1150 8850 1150 8450
+Wire Wire Line
+	1150 8450 650  8450
+Connection ~ 1150 8850
+Wire Wire Line
+	13050 2750 13500 2750
+Wire Wire Line
+	13500 2750 13500 2200
+Connection ~ 13050 2750
+Wire Wire Line
+	13050 2750 13050 2850
 $EndSCHEMATC
