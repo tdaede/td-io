@@ -554,24 +554,24 @@ F 3 "" H 1200 9650 50  0001 C CNN
 $EndComp
 Connection ~ 10700 10050
 $Comp
-L Amplifier_Video:AD813 U3
+L td-io:ADA4891-3 U3
 U 1 1 600EAC98
 P 8100 5900
 F 0 "U3" H 8100 6267 50  0000 C CNN
-F 1 "AD813" H 8100 6176 50  0000 C CNN
+F 1 "ADA4891-3" H 8100 6176 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 8100 5900 50  0001 C CNN
-F 3 "https://www.analog.com/media/en/technical-documentation/data-sheets/AD813.pdf" H 8100 5900 50  0001 C CNN
+F 3 "https://www.analog.com/media/en/technical-documentation/data-sheets/ADA4891-1_4891-2_4891-3_4891-4.PDF" H 8100 5900 50  0001 C CNN
 	1    8100 5900
 	1    0    0    -1  
 $EndComp
 $Comp
-L Amplifier_Video:AD813 U3
+L td-io:ADA4891-3 U3
 U 4 1 600EF901
 P 10550 6000
 F 0 "U3" H 10508 6046 50  0000 L CNN
-F 1 "AD813" H 10508 5955 50  0000 L CNN
+F 1 "ADA4891-3" H 10508 5955 50  0000 L CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 10550 6000 50  0001 C CNN
-F 3 "https://www.analog.com/media/en/technical-documentation/data-sheets/AD813.pdf" H 10550 6000 50  0001 C CNN
+F 3 "https://www.analog.com/media/en/technical-documentation/data-sheets/ADA4891-1_4891-2_4891-3_4891-4.PDF" H 10550 6000 50  0001 C CNN
 	4    10550 6000
 	1    0    0    -1  
 $EndComp
@@ -722,13 +722,13 @@ jamma_red
 Text Label 7700 5800 2    50   ~ 0
 vga_red
 $Comp
-L Amplifier_Video:AD813 U3
+L td-io:ADA4891-3 U3
 U 2 1 60095C91
 P 8100 7450
 F 0 "U3" H 8100 7817 50  0000 C CNN
-F 1 "AD813" H 8100 7726 50  0000 C CNN
+F 1 "ADA4891-3" H 8100 7726 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 8100 7450 50  0001 C CNN
-F 3 "https://www.analog.com/media/en/technical-documentation/data-sheets/AD813.pdf" H 8100 7450 50  0001 C CNN
+F 3 "https://www.analog.com/media/en/technical-documentation/data-sheets/ADA4891-1_4891-2_4891-3_4891-4.PDF" H 8100 7450 50  0001 C CNN
 	2    8100 7450
 	1    0    0    -1  
 $EndComp
@@ -832,13 +832,13 @@ jamma_green
 Text Label 7700 7350 2    50   ~ 0
 vga_green
 $Comp
-L Amplifier_Video:AD813 U3
+L td-io:ADA4891-3 U3
 U 3 1 6009DE48
 P 8050 9000
 F 0 "U3" H 8050 9367 50  0000 C CNN
-F 1 "AD813" H 8050 9276 50  0000 C CNN
+F 1 "ADA4891-3" H 8050 9276 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 8050 9000 50  0001 C CNN
-F 3 "https://www.analog.com/media/en/technical-documentation/data-sheets/AD813.pdf" H 8050 9000 50  0001 C CNN
+F 3 "https://www.analog.com/media/en/technical-documentation/data-sheets/ADA4891-1_4891-2_4891-3_4891-4.PDF" H 8050 9000 50  0001 C CNN
 	3    8050 9000
 	1    0    0    -1  
 $EndComp
@@ -1101,7 +1101,7 @@ Wire Wire Line
 	11000 7800 11050 7800
 Text Label 3000 2350 0    50   ~ 0
 jamma_sync
-Text Label 6900 10350 0    50   ~ 0
+Text Label 11650 7700 0    50   ~ 0
 jamma_sync
 $Comp
 L Device:C C3
