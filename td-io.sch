@@ -1192,14 +1192,14 @@ F 3 "" H 1900 10550 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74LS166 U6
+L 74xx:74LS165 U6
 U 1 1 601A3120
-P 6700 1900
-F 0 "U6" H 7244 1946 50  0000 L CNN
-F 1 "74LV166" H 7244 1855 50  0000 L CNN
-F 2 "Package_SO:SOIC-16_3.9x9.9mm_P1.27mm" H 6700 1900 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS166" H 6700 1900 50  0001 C CNN
-	1    6700 1900
+P 6700 1800
+F 0 "U6" H 7244 1846 50  0000 L CNN
+F 1 "74LS165" H 7244 1755 50  0000 L CNN
+F 2 "Package_SO:SOIC-16_3.9x9.9mm_P1.27mm" H 6700 1800 50  0001 C CNN
+F 3 "https://www.ti.com/lit/ds/symlink/sn74ls165a.pdf" H 6700 1800 50  0001 C CNN
+	1    6700 1800
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -1224,22 +1224,12 @@ F 3 "" H 6700 2900 50  0001 C CNN
 	1    6700 2900
 	1    0    0    -1  
 $EndComp
-Text Label 6200 2600 2    50   ~ 0
+Text Label 6200 2200 2    50   ~ 0
 sr_clr
-Text Label 6200 2300 2    50   ~ 0
+Text Label 6200 2400 2    50   ~ 0
 sr_clk
 Wire Wire Line
-	6700 2900 5850 2900
-Wire Wire Line
-	5850 2900 5850 2400
-Wire Wire Line
-	5850 2400 6200 2400
-Connection ~ 6700 2900
-Wire Wire Line
-	5850 2400 5850 2200
-Wire Wire Line
-	5850 2200 6200 2200
-Connection ~ 5850 2400
+	6700 2900 6200 2900
 $Comp
 L Connector_Generic:Conn_02x17_Odd_Even J7
 U 1 1 601ED35D
@@ -1903,10 +1893,7 @@ F 3 "~" H 5750 950 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	5850 2200 5850 1200
-Wire Wire Line
 	5850 1200 6200 1200
-Connection ~ 5850 2200
 Wire Wire Line
 	6200 1300 5750 1300
 Wire Wire Line
@@ -1974,14 +1961,14 @@ Connection ~ 4850 800
 Wire Wire Line
 	4850 800  5000 800 
 $Comp
-L 74xx:74LS166 U8
+L 74xx:74LS165 U8
 U 1 1 6055CE93
-P 10650 1900
-F 0 "U8" H 11194 1946 50  0000 L CNN
-F 1 "74LV166" H 11194 1855 50  0000 L CNN
-F 2 "Package_SO:SOIC-16_3.9x9.9mm_P1.27mm" H 10650 1900 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS166" H 10650 1900 50  0001 C CNN
-	1    10650 1900
+P 10650 1800
+F 0 "U8" H 11194 1846 50  0000 L CNN
+F 1 "74LS165" H 11194 1755 50  0000 L CNN
+F 2 "Package_SO:SOIC-16_3.9x9.9mm_P1.27mm" H 10650 1800 50  0001 C CNN
+F 3 "https://www.ti.com/lit/ds/symlink/sn74ls165a.pdf" H 10650 1800 50  0001 C CNN
+	1    10650 1800
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -2006,22 +1993,10 @@ F 3 "" H 10650 2900 50  0001 C CNN
 	1    10650 2900
 	1    0    0    -1  
 $EndComp
-Text Label 10150 2600 2    50   ~ 0
+Text Label 10150 2200 2    50   ~ 0
 sr_clr
-Text Label 10150 2300 2    50   ~ 0
+Text Label 10150 2400 2    50   ~ 0
 sr_clk
-Wire Wire Line
-	10650 2900 9800 2900
-Wire Wire Line
-	9800 2900 9800 2400
-Wire Wire Line
-	9800 2400 10150 2400
-Connection ~ 10650 2900
-Wire Wire Line
-	9800 2400 9800 2200
-Wire Wire Line
-	9800 2200 10150 2200
-Connection ~ 9800 2400
 $Comp
 L Device:R R34
 U 1 1 6055CEAE
@@ -2177,17 +2152,6 @@ Connection ~ 8800 800
 Wire Wire Line
 	8800 800  8950 800 
 $Comp
-L 74xx:74LS166 U9
-U 1 1 605892D9
-P 14600 1900
-F 0 "U9" H 15144 1946 50  0000 L CNN
-F 1 "74LV166" H 15144 1855 50  0000 L CNN
-F 2 "Package_SO:SOIC-16_3.9x9.9mm_P1.27mm" H 14600 1900 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS166" H 14600 1900 50  0001 C CNN
-	1    14600 1900
-	1    0    0    -1  
-$EndComp
-$Comp
 L power:+3.3V #PWR012
 U 1 1 605892DF
 P 14600 900
@@ -2209,22 +2173,10 @@ F 3 "" H 14600 2900 50  0001 C CNN
 	1    14600 2900
 	1    0    0    -1  
 $EndComp
-Text Label 14100 2600 2    50   ~ 0
+Text Label 14100 2200 2    50   ~ 0
 sr_clr
-Text Label 14100 2300 2    50   ~ 0
+Text Label 14100 2400 2    50   ~ 0
 sr_clk
-Wire Wire Line
-	14600 2900 13750 2900
-Wire Wire Line
-	13750 2900 13750 2400
-Wire Wire Line
-	13750 2400 14100 2400
-Connection ~ 14600 2900
-Wire Wire Line
-	13750 2400 13750 2200
-Wire Wire Line
-	13750 2200 14100 2200
-Connection ~ 13750 2400
 $Comp
 L Device:R R42
 U 1 1 605892F4
@@ -2314,35 +2266,19 @@ F 3 "~" H 13650 950 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	14100 1300 13650 1300
-Wire Wire Line
 	13650 1300 13650 1100
-Wire Wire Line
-	14100 1400 13400 1400
 Wire Wire Line
 	13400 1400 13400 1100
 Wire Wire Line
-	14100 1500 13150 1500
-Wire Wire Line
 	13150 1500 13150 1100
-Wire Wire Line
-	14100 1600 12900 1600
 Wire Wire Line
 	12900 1600 12900 1100
 Wire Wire Line
-	14100 1700 12650 1700
-Wire Wire Line
 	12650 1700 12650 1100
-Wire Wire Line
-	14100 1800 12400 1800
 Wire Wire Line
 	12400 1800 12400 1100
 Wire Wire Line
-	14100 1900 12150 1900
-Wire Wire Line
 	12150 1900 12150 1100
-Wire Wire Line
-	14100 2000 11900 2000
 Wire Wire Line
 	11900 2000 11900 1100
 Wire Wire Line
@@ -2379,8 +2315,6 @@ $EndComp
 Connection ~ 12750 800 
 Wire Wire Line
 	12750 800  12900 800 
-Wire Wire Line
-	11150 1200 14100 1200
 Wire Wire Line
 	10150 1200 7200 1200
 $Comp
@@ -3304,4 +3238,60 @@ Wire Wire Line
 	15300 9350 15300 8900
 Wire Wire Line
 	15300 8900 15200 8900
+Wire Wire Line
+	5850 1200 5850 2900
+Wire Wire Line
+	6200 2500 6200 2900
+Connection ~ 6200 2900
+Wire Wire Line
+	6200 2900 5850 2900
+Wire Wire Line
+	6700 2800 6700 2900
+Connection ~ 6700 2900
+NoConn ~ 7200 1300
+Wire Wire Line
+	10650 2900 10650 2800
+Wire Wire Line
+	10150 2500 10150 2900
+Wire Wire Line
+	10150 2900 10650 2900
+Connection ~ 10650 2900
+Wire Wire Line
+	14100 2000 11900 2000
+Wire Wire Line
+	14100 1900 12150 1900
+Wire Wire Line
+	14100 1800 12400 1800
+Wire Wire Line
+	14100 1700 12650 1700
+Wire Wire Line
+	14100 1600 12900 1600
+Wire Wire Line
+	14100 1500 13150 1500
+Wire Wire Line
+	14100 1400 13400 1400
+Wire Wire Line
+	14100 1300 13650 1300
+Wire Wire Line
+	11150 1200 14100 1200
+$Comp
+L 74xx:74LS165 U9
+U 1 1 605892D9
+P 14600 1800
+F 0 "U9" H 15144 1846 50  0000 L CNN
+F 1 "74LS165" H 15144 1755 50  0000 L CNN
+F 2 "Package_SO:SOIC-16_3.9x9.9mm_P1.27mm" H 14600 1800 50  0001 C CNN
+F 3 "https://www.ti.com/lit/ds/symlink/sn74ls165a.pdf" H 14600 1800 50  0001 C CNN
+	1    14600 1800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	14600 2800 14600 2900
+Wire Wire Line
+	14100 2500 14100 2900
+Wire Wire Line
+	14100 2900 14600 2900
+Connection ~ 14600 2900
+NoConn ~ 15100 1300
+NoConn ~ 11150 1300
 $EndSCHEMATC
