@@ -3886,4 +3886,6 @@ Wire Wire Line
 	3150 4950 3500 4950
 NoConn ~ 15450 3950
 NoConn ~ 13800 3950
+Text Notes 8700 9100 0    50   ~ 0
+todo:\nnew footprint for RCA jacks\nsmaller ground pad tor tpa3138d2\nsmaller ground pad for tps568230\nfix pin 11/14 swap on VGA jack\nfix DISABLE on ada4891\nadd additional input capacitance on tps568230\nconnect power/ground to xor gate\nmove AC coupling on audio input to after volume pot\nconnect boost caps on tpa3138 before inductor\nincrease tpa3138 output caps' voltage rating for reduced thd\nmake JST-SH footprint\nmove stereo connector farther away from caps\nchange vga amp gain
 $EndSCHEMATC
