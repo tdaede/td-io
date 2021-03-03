@@ -12,43 +12,55 @@ const uint PIN_SR_DATA = 6;
 const uint PIN_SR_CLK = 5;
 const uint PIN_SR_SH = 4;
 
+const uint PIN_METER1 = 7;
+const uint PIN_METER2 = 8;
+const uint PIN_LOCKOUT1 = 9;
+const uint PIN_LOCKOUT2 = 10;
+
 const uint8_t JVS_STATUS_GOOD = 1;
 const uint8_t JVS_STATUS_UNKNOWN_COMMAND = 2;
 const uint8_t JVS_STATUS_CHECKSUM_ERROR = 3;
 
 const uint8_t JVS_REPORT_GOOD = 1;
+const uint8_t JVS_REPORT_PARAMETER_INVALID = 3;
 
 const uint8_t JVS_MAX_LEN = 253; // minus two for status and checksum
 
+// global state
 uint8_t our_address = 0;
+// signed for underflow checks
+int16_t coin_count_p1 = 0;
+int16_t coin_count_p2 = 0;
+uint8_t prev_coin_p1 = 0;
+uint8_t prev_coin_p2 = 0;
 
-#define SR_P1_3 0
-#define SR_P2_3 1
-#define SR_P1_4 2
-#define SR_P2_4 3
-#define SR_P1_5 4
-#define SR_P2_5 5
-#define SR_P1_6 6
-#define SR_P2_6 7
-#define SR_P1_LEFT 8
-#define SR_P2_LEFT 9
-#define SR_P1_RIGHT 10
-#define SR_P2_RIGHT 11
-#define SR_P1_1 12
-#define SR_P2_1 13
-#define SR_P1_2 14
-#define SR_P2_2 15
-#define SR_C1 16
-#define SR_C2 17
-#define SR_P1_START 18
-#define SR_P2_START 19
-#define SR_P1_UP 20
-#define SR_P2_UP 21
-#define SR_P1_DOWN 22
-#define SR_P2_DOWN 23
-#define SR_SERVICE 24
-#define SR_TEST 25
-#define SR_TILT 26
+#define SR_P1_3 7
+#define SR_P2_3 6
+#define SR_P1_4 5
+#define SR_P2_4 4
+#define SR_P1_5 3
+#define SR_P2_5 2
+#define SR_P1_6 1
+#define SR_P2_6 0
+#define SR_P1_LEFT 15
+#define SR_P2_LEFT 14
+#define SR_P1_RIGHT 13
+#define SR_P2_RIGHT 12
+#define SR_P1_1 11
+#define SR_P2_1 10
+#define SR_P1_2 9
+#define SR_P2_2 8
+#define SR_C1 23
+#define SR_C2 22
+#define SR_P1_START 21
+#define SR_P2_START 20
+#define SR_P1_UP 19
+#define SR_P2_UP 18
+#define SR_P1_DOWN 17
+#define SR_P2_DOWN 16
+#define SR_SERVICE 31
+#define SR_TEST 30
+#define SR_TILT 29
 
 const char id_str[] = "TD;TD-IO;v1.0;https://github.com/tdaede/td-io";
 
@@ -92,8 +104,8 @@ uint32_t read_switches() {
     gpio_put(PIN_SR_SH, 1);
     busy_wait_us(1);
     for (int i = 0; i < 32; i++) {
-        r <<= 1;
-        r |= gpio_get(PIN_SR_DATA);
+        r >>= 1;
+        r |= (gpio_get(PIN_SR_DATA) ? 1 : 0) << 31;
         gpio_put(PIN_SR_CLK, 1);
         busy_wait_us(1);
         gpio_put(PIN_SR_CLK, 0);
@@ -101,6 +113,28 @@ uint32_t read_switches() {
     }
     gpio_put(PIN_SR_SH, 0);
     return ~r;
+}
+
+// call periodically with switch read to check level changes of coin input
+void process_coin(uint32_t switches) {
+    if ((switches >> SR_C1 & 1) && !prev_coin_p1) {
+        coin_count_p1++;
+        if (coin_count_p1 > 16383) {
+            coin_count_p1 = 16383;
+        }
+    }
+        if ((switches >> SR_C2 & 1) && !prev_coin_p2) {
+        coin_count_p2++;
+        if (coin_count_p2 > 16383) {
+            coin_count_p2 = 16383;
+        }
+    }
+    prev_coin_p1 = switches >> SR_C1 & 1;
+    prev_coin_p2 = switches >> SR_C2 & 1;
+    gpio_put(PIN_METER1, prev_coin_p1);
+    gpio_put(PIN_METER2, prev_coin_p2);
+    gpio_put(PIN_LOCKOUT1, coin_count_p1 >= 16383);
+    gpio_put(PIN_LOCKOUT2, coin_count_p2 >= 16383);
 }
 
 int main() {
@@ -131,6 +165,20 @@ int main() {
     gpio_init(PIN_SR_SH);
     gpio_put(PIN_SR_SH, 0);
     gpio_set_dir(PIN_SR_SH, GPIO_OUT);
+
+    // coin/lockout drivers
+    gpio_init(PIN_METER1);
+    gpio_put(PIN_METER1, 0);
+    gpio_set_dir(PIN_METER1, GPIO_OUT);
+    gpio_init(PIN_METER2);
+    gpio_put(PIN_METER2, 0);
+    gpio_set_dir(PIN_METER2, GPIO_OUT);
+    gpio_init(PIN_LOCKOUT1);
+    gpio_put(PIN_LOCKOUT1, 0);
+    gpio_set_dir(PIN_LOCKOUT1, GPIO_OUT);
+    gpio_init(PIN_LOCKOUT2);
+    gpio_put(PIN_LOCKOUT2, 0);
+    gpio_set_dir(PIN_LOCKOUT2, GPIO_OUT);
 
     while (true) {
         uint8_t sync = uart_getc(uart0);
@@ -172,7 +220,7 @@ int main() {
                         printf("Got ID code request\n");
                         msg_send[o] = JVS_REPORT_GOOD;
                         o++;
-                        strcpy(&msg_send[o], id_str);
+                        strcpy((char*)&msg_send[o], id_str);
                         o += strlen(id_str) + 1;
                     } else if ((msg_length - i) >= 1 && message[i] == 0x11) {
                         i++;
@@ -209,6 +257,7 @@ int main() {
                         msg_send[o] = JVS_REPORT_GOOD;
                         o++;
                         uint32_t switches = read_switches();
+                        process_coin(switches);
                         msg_send[o] = ((switches >> SR_TEST) & 1) << 7
                             | ((switches >> SR_TILT) & 1) << 7;
                         o++;
@@ -255,10 +304,70 @@ int main() {
                         o++;
                         //printf("Got coin slot request for %02x slots\n", slots);
                         for (int slot = 0; slot < slots; slot++) {
-                            msg_send[o] = 0x00;
-                            msg_send[o+1] = 0x00;
+                            if (slot == 0) {
+                                msg_send[o] = coin_count_p1 >> 8;
+                                msg_send[o+1] = coin_count_p1 & 0xFF;
+                            } else if (slot == 1) {
+                                msg_send[o] = coin_count_p2 >> 8;
+                                msg_send[o+1] = coin_count_p2 & 0xFF;
+                            } else {
+                                msg_send[o] = 0x80;
+                                msg_send[o+1] = 0x00;
+                            }
                             o += 2;
                         }
+                    } else if ((msg_length - i) >= 4 && message[i] == 0x30) {
+                        uint8_t slot = message[i+1];
+                        uint16_t amount = (message[i+2] << 8) + message[i+3];
+                        i += 4;
+                        printf("Decrement coin counter %d by %d\n", (int)slot, (int)amount);
+                        if (amount > 16383) {
+                            amount = 16383;
+                            printf("Capped to 16383\n");
+                        }
+                        if (slot == 1) {
+                            msg_send[o] = JVS_REPORT_GOOD;
+                            coin_count_p1 -= amount;
+                            if (coin_count_p1 < 0) {
+                                coin_count_p1 = 0;
+                            }
+                        } else if (slot == 2) {
+                            msg_send[o] = JVS_REPORT_GOOD;
+                            coin_count_p2 -= amount;
+                            if (coin_count_p2 < 0) {
+                                coin_count_p2 = 0;
+                            }
+                        } else {
+                            printf("Invalid coin counter slot\n");
+                            msg_send[o] = JVS_REPORT_PARAMETER_INVALID;
+                        }
+                        o++;
+                    } else if ((msg_length - i) >= 4 && message[i] == 0x35) {
+                        uint8_t slot = message[i+1];
+                        uint16_t amount = (message[i+2] << 8) + message[i+3];
+                        i += 4;
+                        printf("Increment coin counter %d by %d\n", (int)slot, (int)amount);
+                        if (amount > 16383) {
+                            amount = 16383;
+                            printf("Capped to 16383\n");
+                        }
+                        if (slot == 1) {
+                            msg_send[o] = JVS_REPORT_GOOD;
+                            coin_count_p1 += amount;
+                            if (coin_count_p1 > 16383) {
+                                coin_count_p1 = 16383;
+                            }
+                        } else if (slot == 2) {
+                            msg_send[o] = JVS_REPORT_GOOD;
+                            coin_count_p2 += amount;
+                            if (coin_count_p2 > 16383) {
+                                coin_count_p2 = 16383;
+                            }
+                        } else {
+                            printf("Invalid coin counter slot\n");
+                            msg_send[o] = JVS_REPORT_PARAMETER_INVALID;
+                        }
+                        o++;
                     } else {
                         printf("Unsupported message: N: %02x L: %02x M: ", node_num, msg_length);
                         for (int j = 0; j < msg_length; j++) {
