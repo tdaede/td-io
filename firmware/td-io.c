@@ -13,12 +13,42 @@ const uint PIN_SR_CLK = 5;
 const uint PIN_SR_SH = 4;
 
 const uint8_t JVS_STATUS_GOOD = 1;
+const uint8_t JVS_STATUS_UNKNOWN_COMMAND = 2;
+const uint8_t JVS_STATUS_CHECKSUM_ERROR = 3;
 
 const uint8_t JVS_REPORT_GOOD = 1;
 
 const uint8_t JVS_MAX_LEN = 253; // minus two for status and checksum
 
 uint8_t our_address = 0;
+
+#define SR_P1_3 0
+#define SR_P2_3 1
+#define SR_P1_4 2
+#define SR_P2_4 3
+#define SR_P1_5 4
+#define SR_P2_5 5
+#define SR_P1_6 6
+#define SR_P2_6 7
+#define SR_P1_LEFT 8
+#define SR_P2_LEFT 9
+#define SR_P1_RIGHT 10
+#define SR_P2_RIGHT 11
+#define SR_P1_1 12
+#define SR_P2_1 13
+#define SR_P1_2 14
+#define SR_P2_2 15
+#define SR_C1 16
+#define SR_C2 17
+#define SR_P1_START 18
+#define SR_P2_START 19
+#define SR_P1_UP 20
+#define SR_P2_UP 21
+#define SR_P1_DOWN 22
+#define SR_P2_DOWN 23
+#define SR_SERVICE 24
+#define SR_TEST 25
+#define SR_TILT 26
 
 const char id_str[] = "TD;TD-IO;v1.0;https://github.com/tdaede/td-io";
 
@@ -39,7 +69,7 @@ void stop_transmit() {
     gpio_put(PIN_JVS_RE, 0); // enable receiver
 }
 
-void send_message(uint8_t* m, uint8_t msg_len) {
+void send_message(uint8_t status, uint8_t* m, uint8_t msg_len) {
     start_transmit();
     uart_putc(uart0, 0xe0);
     uint8_t checksum = 0;
@@ -47,7 +77,6 @@ void send_message(uint8_t* m, uint8_t msg_len) {
     checksum += 0;
     uart_putc(uart0, msg_len + 2);
     checksum += msg_len + 2;
-    uint8_t status = JVS_STATUS_GOOD;
     uart_putc(uart0, status);
     checksum += status;
     for (int i = 0; i < msg_len; i++) {
@@ -63,12 +92,12 @@ uint32_t read_switches() {
     gpio_put(PIN_SR_SH, 1);
     busy_wait_us(1);
     for (int i = 0; i < 32; i++) {
+        r <<= 1;
+        r |= gpio_get(PIN_SR_DATA);
         gpio_put(PIN_SR_CLK, 1);
         busy_wait_us(1);
         gpio_put(PIN_SR_CLK, 0);
         busy_wait_us(1);
-        r <<= 1;
-        r |= gpio_get(PIN_SR_DATA);
     }
     gpio_put(PIN_SR_SH, 0);
     return ~r;
@@ -180,20 +209,40 @@ int main() {
                         msg_send[o] = JVS_REPORT_GOOD;
                         o++;
                         uint32_t switches = read_switches();
-                        msg_send[o] = 0x00; // test switches
+                        msg_send[o] = ((switches >> SR_TEST) & 1) << 7
+                            | ((switches >> SR_TILT) & 1) << 7;
                         o++;
                         //printf("Got coin slot request for %02x slots\n", slots);
                         for (int player = 0; player < num_players; player++) {
                             for (int byte = 0; byte < bytes_per_player; byte++) {
                                 uint8_t b = 0;
                                 if ((player == 0) && (byte == 0)) {
-                                    b = switches & 0xFF;
+                                    b = ((switches >> SR_P1_2) & 1) << 0
+                                        | ((switches >> SR_P1_1) & 1) << 1
+                                        | ((switches >> SR_P1_RIGHT) & 1) << 2
+                                        | ((switches >> SR_P1_LEFT) & 1) << 3
+                                        | ((switches >> SR_P1_DOWN) & 1) << 4
+                                        | ((switches >> SR_P1_UP) & 1) << 5
+                                        | ((switches >> SR_SERVICE) & 1) << 6
+                                        | ((switches >> SR_P1_START) & 1) << 7;
                                 } else if ((player == 0) && (byte == 1)) {
-                                    b = (switches >> 8) & 0xFF;
+                                    b = ((switches >> SR_P1_6) & 1) << 4
+                                        | ((switches >> SR_P1_5) & 1) << 5
+                                        | ((switches >> SR_P1_4) & 1) << 6
+                                        | ((switches >> SR_P1_3) & 1) << 7;
                                 } else if ((player == 1) && (byte == 0)) {
-                                    b = (switches >> 16) & 0xFF;
+                                    b = ((switches >> SR_P2_2) & 1) << 0
+                                        | ((switches >> SR_P2_1) & 1) << 1
+                                        | ((switches >> SR_P2_RIGHT) & 1) << 2
+                                        | ((switches >> SR_P2_LEFT) & 1) << 3
+                                        | ((switches >> SR_P2_DOWN) & 1) << 4
+                                        | ((switches >> SR_P2_UP) & 1) << 5
+                                        | ((switches >> SR_P2_START) & 1) << 7;
                                 } else if ((player == 1) && (byte == 1)) {
-                                    b = (switches >> 24) & 0xFF;
+                                    b = ((switches >> SR_P2_6) & 1) << 4
+                                        | ((switches >> SR_P2_5) & 1) << 5
+                                        | ((switches >> SR_P2_4) & 1) << 6
+                                        | ((switches >> SR_P2_3) & 1) << 7;
                                 }
                                 msg_send[o] = b;
                                 o++;
@@ -216,13 +265,17 @@ int main() {
                             printf("%02x", message[j]);
                         }
                         printf("\n");
+                        status = JVS_STATUS_UNKNOWN_COMMAND;
+                        break;
                     }
                 }
-                if (o > 0) {
-                    send_message(msg_send, o);
+                if ((o > 0) || (status != JVS_STATUS_GOOD)) {
+                    send_message(status, msg_send, o);
                 }
             } else {
                 printf("Checksum mismatch: theirs: %02x ours: %02x\n", their_checksum, our_checksum);
+                status = JVS_STATUS_CHECKSUM_ERROR;
+                send_message(status, msg_send, 0);
             }
         } else {
             //printf("Saw non-sync code %02x\n", sync);
