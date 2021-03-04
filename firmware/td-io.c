@@ -16,10 +16,10 @@ const uint PIN_SR_DATA = 6;
 const uint PIN_SR_CLK = 5;
 const uint PIN_SR_SH = 4;
 
-const uint PIN_METER1 = 7;
-const uint PIN_METER2 = 8;
-const uint PIN_LOCKOUT1 = 9;
-const uint PIN_LOCKOUT2 = 10;
+const uint PIN_METER1 = 8;
+const uint PIN_METER2 = 7;
+const uint PIN_LOCKOUT1 = 10;
+const uint PIN_LOCKOUT2 = 9;
 
 const uint16_t JVS_TERMINATION_THRESHOLD = (uint16_t)(3.75/2.0/3.3*4096);
 const uint16_t JVS_0V_THRESHOLD = (uint16_t)(1.25/2.0/3.3*4096);
@@ -151,6 +151,7 @@ uint32_t read_switches() {
 
 void update_termination() {
     uint16_t v = adc_read();
+    v = 4095; // FIXME: bad adc input
     if (v >= JVS_TERMINATION_THRESHOLD) {
         gpio_put(PIN_JVS_TERMINATION, 0);
     } else {
