@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
+#include "hardware/adc.h"
 #include <string.h>
 
 const uint PIN_JVS_RE = 2;
@@ -7,6 +8,9 @@ const uint PIN_JVS_DE = 3;
 
 const uint PIN_JVS_SENSE_2_5V = 14;
 const uint PIN_JVS_SENSE_0V = 13;
+
+const uint PIN_JVS_TERMINATION = 15;
+const uint PIN_JVS_SENSE_IN = 26;
 
 const uint PIN_SR_DATA = 6;
 const uint PIN_SR_CLK = 5;
@@ -17,9 +21,13 @@ const uint PIN_METER2 = 8;
 const uint PIN_LOCKOUT1 = 9;
 const uint PIN_LOCKOUT2 = 10;
 
+const uint16_t JVS_TERMINATION_THRESHOLD = (uint16_t)(3.75/2.0/3.3*4096);
+const uint16_t JVS_0V_THRESHOLD = (uint16_t)(1.25/2.0/3.3*4096);
+
 const uint8_t JVS_STATUS_GOOD = 1;
 const uint8_t JVS_STATUS_UNKNOWN_COMMAND = 2;
 const uint8_t JVS_STATUS_CHECKSUM_ERROR = 3;
+const uint8_t JVS_STATUS_OVERFLOW = 4;
 
 const uint8_t JVS_REPORT_GOOD = 1;
 const uint8_t JVS_REPORT_PARAMETER_INVALID = 3;
@@ -70,6 +78,32 @@ const uint8_t input_desc[] = {
     0x00
 };
 
+void jvs_sync() {
+    uart_putc(uart0, 0xe0);
+}
+
+uint8_t jvs_getc() {
+    uint8_t c = uart_getc(uart0);
+    if (c == 0xd0) {
+        c = uart_getc(uart0);
+        return c + 1;
+    } else {
+        return c;
+    }
+}
+
+void jvs_putc(uint8_t c) {
+    if (c == 0xe0) {
+        uart_putc(uart0, 0xd0);
+        uart_putc(uart0, 0xdf);
+    } else if (c == 0xd0) {
+        uart_putc(uart0, 0xd0);
+        uart_putc(uart0, 0xcf);
+    } else {
+        uart_putc(uart0, c);
+    }
+}
+
 void start_transmit() {
     gpio_put(PIN_JVS_RE, 1); // disable receive
     gpio_put(PIN_JVS_DE, 1); // enable transmitter
@@ -83,19 +117,19 @@ void stop_transmit() {
 
 void send_message(uint8_t status, uint8_t* m, uint8_t msg_len) {
     start_transmit();
-    uart_putc(uart0, 0xe0);
+    jvs_sync();
     uint8_t checksum = 0;
-    uart_putc(uart0, 0);
+    jvs_putc(0);
     checksum += 0;
-    uart_putc(uart0, msg_len + 2);
+    jvs_putc(msg_len + 2);
     checksum += msg_len + 2;
-    uart_putc(uart0, status);
+    jvs_putc(status);
     checksum += status;
     for (int i = 0; i < msg_len; i++) {
-        uart_putc(uart0, m[i]);
+        jvs_putc(m[i]);
         checksum += m[i];
     }
-    uart_putc(uart0, checksum);
+    jvs_putc(checksum);
     stop_transmit();
 }
 
@@ -113,6 +147,15 @@ uint32_t read_switches() {
     }
     gpio_put(PIN_SR_SH, 0);
     return ~r;
+}
+
+void update_termination() {
+    uint16_t v = adc_read();
+    if (v >= JVS_TERMINATION_THRESHOLD) {
+        gpio_put(PIN_JVS_TERMINATION, 0);
+    } else {
+        gpio_put(PIN_JVS_TERMINATION, 1);
+    }
 }
 
 // call periodically with switch read to check level changes of coin input
@@ -155,6 +198,12 @@ int main() {
     gpio_init(PIN_JVS_SENSE_0V);
     gpio_put(PIN_JVS_SENSE_0V, 0);
     gpio_set_dir(PIN_JVS_SENSE_0V, GPIO_OUT);
+    gpio_init(PIN_JVS_TERMINATION);
+    gpio_put(PIN_JVS_TERMINATION, 1); // disable termination by default
+    gpio_set_dir(PIN_JVS_TERMINATION, GPIO_OUT);
+    adc_init();
+    adc_gpio_init(PIN_JVS_SENSE_IN);
+    adc_select_input(0);
 
     // sr
     gpio_init(PIN_SR_DATA);
@@ -180,25 +229,30 @@ int main() {
     gpio_put(PIN_LOCKOUT2, 0);
     gpio_set_dir(PIN_LOCKOUT2, GPIO_OUT);
 
+    update_termination();
+
     while (true) {
         uint8_t sync = uart_getc(uart0);
         if (sync == 0xe0) {
             uint8_t our_checksum = 0;
-            uint8_t node_num = uart_getc(uart0);
+            uint8_t node_num = jvs_getc();
+            if (!((node_num == 0xff) || ((our_address == node_num) && (our_address != 0)))) {
+                continue;
+            }
             our_checksum += node_num;
-            uint8_t length = uart_getc(uart0);
+            uint8_t length = jvs_getc();
             our_checksum += length;
             uint8_t msg_length = length - 1;
             uint8_t message[256];
             for (int i = 0; i < msg_length; i++) {
-                uint8_t c = uart_getc(uart0);
+                uint8_t c = jvs_getc();
                 our_checksum += c;
                 message[i] = c;
             }
-            uint8_t msg_send[256];
+            uint8_t msg_send[256*2]; // a few bytes to spare for easier overflow checking
             int o = 0;
             uint8_t status = JVS_STATUS_GOOD;
-            uint8_t their_checksum = uart_getc(uart0);
+            uint8_t their_checksum = jvs_getc();
             if (our_checksum == their_checksum) {
                 int i = 0;
                 while (i < msg_length) {
@@ -208,13 +262,21 @@ int main() {
                         gpio_put(PIN_JVS_SENSE_0V, 0);
                         i += 2;
                     } else if ((msg_length - i) >= 2 && message[i] == 0xf1) {
-                        printf("Assign node id N: %02x\n", message[i+1]);
-                        printf("Assume it is us\n");
-                        our_address = message[i+1];
+                        uint8_t node_id = message[i+1];
                         i += 2;
-                        msg_send[o] = JVS_REPORT_GOOD;
-                        o++;
-                        gpio_put(PIN_JVS_SENSE_0V, 1);
+                        printf("Assign node id N: %02x\n", node_id);
+                        uint16_t v = adc_read();
+                        printf("Reading ADC: %d\n", v);
+                        v = 4095; // FIXME: adc circuit is bad
+                        if ((v >= JVS_TERMINATION_THRESHOLD) || (v < JVS_0V_THRESHOLD)) {
+                            printf("Assigning our address\n");
+                            our_address = node_id;
+                            msg_send[o] = JVS_REPORT_GOOD;
+                            o++;
+                            gpio_put(PIN_JVS_SENSE_0V, 1);
+                        } else {
+                            printf("We are not currently last in the chain, skipping assignment\n");
+                        }
                     } else if ((msg_length - i) >= 1 && message[i] == 0x10) {
                         i++;
                         printf("Got ID code request\n");
@@ -254,6 +316,11 @@ int main() {
                         int num_players = message[i+1];
                         int bytes_per_player = message[i+2];
                         i += 3;
+                        if (o + num_players*bytes_per_player >= JVS_MAX_LEN) {
+                            printf("JVS response overflow!\n");
+                            status = JVS_STATUS_OVERFLOW;
+                            break;
+                        }
                         msg_send[o] = JVS_REPORT_GOOD;
                         o++;
                         uint32_t switches = read_switches();
@@ -300,6 +367,11 @@ int main() {
                     } else if ((msg_length - i) >= 2 && message[i] == 0x21) {
                         int slots = message[i+1];
                         i += 2;
+                        if (o + slots*2 >= JVS_MAX_LEN) {
+                            printf("JVS response overflow!\n");
+                            status = JVS_STATUS_OVERFLOW;
+                            break;
+                        }
                         msg_send[o] = JVS_REPORT_GOOD;
                         o++;
                         //printf("Got coin slot request for %02x slots\n", slots);
@@ -377,6 +449,11 @@ int main() {
                         status = JVS_STATUS_UNKNOWN_COMMAND;
                         break;
                     }
+                    if (o >= JVS_MAX_LEN) {
+                        printf("JVS response overflow!\n");
+                        status = JVS_STATUS_OVERFLOW;
+                        break;
+                    }
                 }
                 if ((o > 0) || (status != JVS_STATUS_GOOD)) {
                     send_message(status, msg_send, o);
@@ -387,6 +464,8 @@ int main() {
                 send_message(status, msg_send, 0);
             }
         } else {
+            // note because of disabling the rx, we always read a 00 byte after sending here
+            update_termination(); // convenient time to read adc
             //printf("Saw non-sync code %02x\n", sync);
         }
     }

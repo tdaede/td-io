@@ -16,7 +16,7 @@ add_executable(td-io
         )
 
 # Pull in our pico_stdlib which aggregates commonly used features
-target_link_libraries(td-io pico_stdlib)
+target_link_libraries(td-io pico_stdlib hardware_adc)
 
 # enable usb output, disable uart output
 pico_enable_stdio_usb(td-io 1)
