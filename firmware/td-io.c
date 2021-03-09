@@ -70,6 +70,7 @@ uint8_t prev_coin_p2 = 0;
 #define SR_TEST 30
 #define SR_TILT 29
 
+const uint8_t JVS_COMM_VER = 0x10;
 const char id_str[] = "TD;TD-IO;v1.0;https://github.com/tdaede/td-io";
 
 const uint8_t input_desc[] = {
@@ -301,10 +302,10 @@ int main() {
                         o++;
                     } else if ((msg_length - i) >= 1 && message[i] == 0x13) {
                         i++;
-                        printf("Got io revision request\n");
+                        printf("Got comm revision request\n");
                         msg_send[o] = JVS_REPORT_GOOD;
                         o++;
-                        msg_send[o] = 0x10;
+                        msg_send[o] = JVS_COMM_VER;
                         o++;
                     } else if ((msg_length - i) >= 1 && message[i] == 0x14) {
                         i++;
@@ -313,6 +314,18 @@ int main() {
                         o++;
                         memcpy(&msg_send[o], input_desc, sizeof(input_desc));
                         o += sizeof(input_desc);
+                    } else if ((msg_length - i) >= 1 && message[i] == 0x13) {
+                        i++;
+                        printf("Got main board ID: ");
+                        while (i < msg_length) {
+                            char c = message[i];
+                            i++;
+                            if (c == 0) break;
+                            putchar(message[i]);
+                        }
+                        printf("\n");
+                        msg_send[o] = JVS_REPORT_GOOD;
+                        o++;
                     } else if ((msg_length - i) >= 3 && message[i] == 0x20) {
                         int num_players = message[i+1];
                         int bytes_per_player = message[i+2];
