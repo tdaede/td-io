@@ -22,6 +22,8 @@ const uint PIN_LOCKOUT1 = 10;
 const uint PIN_LOCKOUT2 = 9;
 
 const uint PIN_LED_ENUMERATED = PICO_DEFAULT_LED_PIN;
+const uint PIN_DIP1 = 16;
+const uint PIN_DIP2 = 17;
 
 const uint16_t JVS_TERMINATION_THRESHOLD = (uint16_t)(3.75/2.0/3.3*4096);
 const uint16_t JVS_0V_THRESHOLD = (uint16_t)(1.25/2.0/3.3*4096);
@@ -75,7 +77,13 @@ uint8_t prev_coin_p2 = 0;
 const uint8_t JVS_COMM_VER = 0x10;
 const char id_str[] = "TD;TD-IO;v1.0;https://github.com/tdaede/td-io";
 
-const uint8_t input_desc[] = {
+const uint8_t input_desc_1coin[] = {
+    0x01, 2, 12, 0,
+    0x02, 1, 0, 0,
+    0x00
+};
+
+const uint8_t input_desc_2coin[] = {
     0x01, 2, 12, 0,
     0x02, 2, 0, 0,
     0x00
@@ -237,6 +245,9 @@ int main() {
     gpio_init(PIN_LED_ENUMERATED);
     gpio_put(PIN_LED_ENUMERATED, 0);
     gpio_set_dir(PIN_LED_ENUMERATED, GPIO_OUT);
+    gpio_init(PIN_DIP1);
+    gpio_set_dir(PIN_DIP1, GPIO_IN);
+    gpio_pull_up(PIN_DIP1);
 
     update_termination();
 
@@ -321,9 +332,13 @@ int main() {
                         printf("Got input descriptor request\n");
                         msg_send[o] = JVS_REPORT_GOOD;
                         o++;
-                        memcpy(&msg_send[o], input_desc, sizeof(input_desc));
-                        o += sizeof(input_desc);
-                    } else if ((msg_length - i) >= 1 && message[i] == 0x13) {
+                        if (gpio_get(PIN_DIP1)) {
+                            memcpy(&msg_send[o], input_desc_1coin, sizeof(input_desc_1coin));
+                            o += sizeof(input_desc_1coin);
+                        } else {
+                            memcpy(&msg_send[o], input_desc_2coin, sizeof(input_desc_2coin));                        o += sizeof(input_desc_2coin);
+                        }
+                    } else if ((msg_length - i) >= 1 && message[i] == 0x15) {
                         i++;
                         printf("Got main board ID: ");
                         while (i < msg_length) {
@@ -351,7 +366,7 @@ int main() {
                         msg_send[o] = ((switches >> SR_TEST) & 1) << 7
                             | ((switches >> SR_TILT) & 1) << 7;
                         o++;
-                        //printf("Got coin slot request for %02x slots\n", slots);
+                        //printf("Got switch request for %02x players\n", num_players);
                         for (int player = 0; player < num_players; player++) {
                             for (int byte = 0; byte < bytes_per_player; byte++) {
                                 uint8_t b = 0;
@@ -478,6 +493,7 @@ int main() {
                         break;
                     }
                 }
+                fflush(stdout);
                 if ((o > 0) || (status != JVS_STATUS_GOOD)) {
                     send_message(status, msg_send, o);
                 }
