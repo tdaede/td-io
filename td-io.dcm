@@ -12,4 +12,16 @@ K triple opamp video rail-to-rail
 F https://www.analog.com/media/en/technical-documentation/data-sheets/ADA4891-1_4891-2_4891-3_4891-4.PDF
 $ENDCMP
 #
+$CMP LM2664M4
+D Switched Capacitor Voltage Converter, Doubles or Splits Input Supply Voltage (2.5 V to 5.5 V or 1.8 V to 11 V), 40 mA, SOT-23-6
+K switched capacitor voltage converter doubler splitter
+F https://www.ti.com/lit/ds/symlink/lm2665.pdf
+$ENDCMP
+#
+$CMP TPS259631
+D 5V/12V eFuse Protection Switch (VSON-10)
+K efuse protection switch
+F http://www.ti.com/lit/ds/symlink/tps25925.pdf
+$ENDCMP
+#
 #End Doc Library
