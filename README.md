@@ -2,7 +2,7 @@ td-io is a JVS I/O board designed to adapt older JAMMA-compatible cabinets to th
 
 # JVS inputs
 
-The JVS I/O bus connects to the board via USB-style A and B connectors. Daisy chaining is supported. The I/O presents two players, each with a single joystick/lever and six buttons. Joystick and button 1-4 inputs are mapped to the JAMMA edge connector, and buttons 4-6 are mapped to a CPS2-style kick harness connector.
+The JVS I/O bus connects to the board via USB-style A and B connectors. Daisy chaining is supported. The I/O presents two players, each with a single joystick/lever and six buttons. Joystick and button 1-4 inputs are mapped to the JAMMA edge connector, and buttons 4-6 are mapped to a CPS2-style kick harness connector. Buttons are polled on request, ensuring microsecond-level latency.
 
 Service, test, and tilt buttons are also supported. JAMMA's single ervice button is mapped to JVS player 1's service button.
 
