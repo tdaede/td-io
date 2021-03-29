@@ -2452,8 +2452,6 @@ $EndComp
 Connection ~ 11350 9950
 NoConn ~ 15200 8600
 NoConn ~ 15200 8200
-NoConn ~ 15200 7900
-NoConn ~ 15200 7700
 $Comp
 L Device:C C13
 U 1 1 613ED272
@@ -3632,12 +3630,12 @@ Wire Wire Line
 $Comp
 L Transistor_FET:FDS6930B Q1
 U 2 1 60DBCFF1
-P 12150 7300
-F 0 "Q1" H 12355 7346 50  0000 L CNN
-F 1 "FDS6930B" H 12355 7255 50  0000 L CNN
-F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 12350 7225 50  0001 L CIN
-F 3 "http://www.onsemi.com/pub/Collateral/FDS6930B-D.PDF" H 12150 7300 50  0001 L CNN
-	2    12150 7300
+P 11000 8650
+F 0 "Q1" H 11205 8696 50  0000 L CNN
+F 1 "FDS6930B" H 11205 8605 50  0000 L CNN
+F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 11200 8575 50  0001 L CIN
+F 3 "http://www.onsemi.com/pub/Collateral/FDS6930B-D.PDF" H 11000 8650 50  0001 L CNN
+	2    11000 8650
 	1    0    0    -1  
 $EndComp
 NoConn ~ 13800 7600
@@ -3984,18 +3982,6 @@ Wire Wire Line
 Connection ~ 11850 3550
 Text Label 13800 8600 2    50   ~ 0
 sense_in_low
-$Comp
-L MCU_RaspberryPi_and_Boards:Pico U10
-U 1 1 601A0730
-P 14500 8050
-F 0 "U10" H 14500 9265 50  0000 C CNN
-F 1 "Pico" H 14500 9174 50  0000 C CNN
-F 2 "td-io:RPi_Pico_SMD" V 14500 8050 50  0001 C CNN
-F 3 "" H 14500 8050 50  0001 C CNN
-F 4 "2648-SC0915CT-ND" H 14500 8050 50  0001 C CNN "Digikey"
-	1    14500 8050
-	1    0    0    -1  
-$EndComp
 Text Label 13800 8500 2    50   ~ 0
 sense_in_high
 $Comp
@@ -4380,4 +4366,65 @@ F 3 "~" H 2000 3300 50  0001 C CNN
 	1    2000 3300
 	1    0    0    1   
 $EndComp
+$Comp
+L Connector:Conn_01x05_Male J?
+U 1 1 62EAF91C
+P 12200 7400
+F 0 "J?" H 12308 7781 50  0000 C CNN
+F 1 "Conn_01x05_Male" H 12308 7690 50  0000 C CNN
+F 2 "Connector_JST:JST_XH_B5B-XH-A_1x05_P2.50mm_Vertical" H 12200 7400 50  0001 C CNN
+F 3 "~" H 12200 7400 50  0001 C CNN
+	1    12200 7400
+	1    0    0    -1  
+$EndComp
+$Comp
+L MCU_RaspberryPi_and_Boards:Pico U10
+U 1 1 601A0730
+P 14500 8050
+F 0 "U10" H 14500 9265 50  0000 C CNN
+F 1 "Pico" H 14500 9174 50  0000 C CNN
+F 2 "td-io:RPi_Pico_SMD" V 14500 8050 50  0001 C CNN
+F 3 "" H 14500 8050 50  0001 C CNN
+F 4 "2648-SC0915CT-ND" H 14500 8050 50  0001 C CNN "Digikey"
+	1    14500 8050
+	1    0    0    -1  
+$EndComp
+Text Label 15200 8000 0    50   ~ 0
+adc0
+Text Label 15200 7900 0    50   ~ 0
+adc1
+Text Label 15200 7700 0    50   ~ 0
+adc2
+$Comp
+L power:+3.3V #PWR?
+U 1 1 62F59ED3
+P 12700 7200
+F 0 "#PWR?" H 12700 7050 50  0001 C CNN
+F 1 "+3.3V" H 12715 7373 50  0000 C CNN
+F 2 "" H 12700 7200 50  0001 C CNN
+F 3 "" H 12700 7200 50  0001 C CNN
+	1    12700 7200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	12400 7200 12700 7200
+$Comp
+L power:GND #PWR?
+U 1 1 62FACC26
+P 12700 7600
+F 0 "#PWR?" H 12700 7350 50  0001 C CNN
+F 1 "GND" H 12705 7427 50  0000 C CNN
+F 2 "" H 12700 7600 50  0001 C CNN
+F 3 "" H 12700 7600 50  0001 C CNN
+	1    12700 7600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	12700 7600 12400 7600
+Text Label 12400 7300 0    50   ~ 0
+adc0
+Text Label 12400 7400 0    50   ~ 0
+adc1
+Text Label 12400 7500 0    50   ~ 0
+adc2
 $EndSCHEMATC
