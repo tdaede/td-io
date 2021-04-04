@@ -21,6 +21,8 @@ const uint PIN_METER2 = 7;
 const uint PIN_LOCKOUT1 = 10;
 const uint PIN_LOCKOUT2 = 9;
 
+const uint PIN_LED_ENUMERATED = PICO_DEFAULT_LED_PIN;
+
 const uint16_t JVS_TERMINATION_THRESHOLD = (uint16_t)(3.75/2.0/3.3*4096);
 const uint16_t JVS_0V_THRESHOLD = (uint16_t)(1.25/2.0/3.3*4096);
 
@@ -231,6 +233,11 @@ int main() {
     gpio_put(PIN_LOCKOUT2, 0);
     gpio_set_dir(PIN_LOCKOUT2, GPIO_OUT);
 
+    // ui
+    gpio_init(PIN_LED_ENUMERATED);
+    gpio_put(PIN_LED_ENUMERATED, 0);
+    gpio_set_dir(PIN_LED_ENUMERATED, GPIO_OUT);
+
     update_termination();
 
     while (true) {
@@ -262,6 +269,7 @@ int main() {
                         printf("N: %02x Reset\n", node_num);
                         our_address = 0;
                         gpio_put(PIN_JVS_SENSE_0V, 0);
+                        gpio_put(PIN_LED_ENUMERATED, 0);
                         i += 2;
                     } else if ((msg_length - i) >= 2 && message[i] == 0xf1) {
                         uint8_t node_id = message[i+1];
@@ -276,6 +284,7 @@ int main() {
                             msg_send[o] = JVS_REPORT_GOOD;
                             o++;
                             gpio_put(PIN_JVS_SENSE_0V, 1);
+                            gpio_put(PIN_LED_ENUMERATED, 1);
                         } else {
                             printf("We are not currently last in the chain, skipping assignment\n");
                         }
