@@ -4,7 +4,7 @@ td-io is a JVS I/O board designed to adapt older JAMMA-compatible cabinets to th
 
 The JVS I/O bus connects to the board via USB-style A and B connectors. Daisy chaining is supported. The I/O presents two players, each with a single joystick/lever and six buttons. Joystick and button 1-4 inputs are mapped to the JAMMA edge connector, and buttons 4-6 are mapped to a CPS2-style kick harness connector. Buttons are polled on request, ensuring microsecond-level latency.
 
-Service, test, and tilt buttons are also supported. JAMMA's single ervice button is mapped to JVS player 1's service button.
+Service, test, and tilt buttons are also supported. JAMMA's single service button is mapped to JVS player 1's service button.
 
 The board also presents one or two coin slots, toggleable by a DIP switch. The board also features two coin meter drivers and two coin lockout drivers. Coins are locked out when the respective coin count is set to its max value (16383).
 
