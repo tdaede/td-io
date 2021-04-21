@@ -12,9 +12,9 @@ const uint PIN_JVS_SENSE_0V = 13;
 const uint PIN_JVS_TERMINATION = 15;
 const uint PIN_JVS_SENSE_IN = 26;
 
-const uint PIN_SR_DATA = 6;
-const uint PIN_SR_CLK = 5;
-const uint PIN_SR_SH = 4;
+const uint PIN_SR_DATA = 20;
+const uint PIN_SR_CLK = 18;
+const uint PIN_SR_SH = 21;
 
 const uint PIN_METER1 = 8;
 const uint PIN_METER2 = 7;
@@ -117,6 +117,7 @@ void jvs_putc(uint8_t c) {
 
 void start_transmit() {
     gpio_put(PIN_JVS_RE, 1); // disable receive
+    busy_wait_us_32(200);    // 200us min for exa compat
     gpio_put(PIN_JVS_DE, 1); // enable transmitter
 }
 
