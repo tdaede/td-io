@@ -4671,4 +4671,6 @@ $EndComp
 Connection ~ 10500 6950
 Wire Wire Line
 	10500 6100 10500 6650
+Text Notes 4050 8000 0    50   ~ 0
+TODO:\nreverse amp PLIMIT\nleave video amp disables floating\nremove R60
 $EndSCHEMATC
