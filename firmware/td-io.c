@@ -2,6 +2,7 @@
 #include "pico/stdlib.h"
 #include "hardware/adc.h"
 #include <string.h>
+#include "ws2812.h"
 
 const uint PIN_JVS_RE = 2;
 const uint PIN_JVS_DE = 3;
@@ -254,6 +255,11 @@ int main() {
 
     update_termination();
 
+    init_ws2812(27);
+
+    int ws2812_counter = 0;
+    uint32_t switches;
+
     while (true) {
         uint8_t sync = uart_getc(uart0);
         if (sync == 0xe0) {
@@ -363,7 +369,7 @@ int main() {
                         }
                         msg_send[o] = JVS_REPORT_GOOD;
                         o++;
-                        uint32_t switches = read_switches();
+                        switches = read_switches();
                         process_coin(switches);
                         msg_send[o] = ((switches >> SR_TEST) & 1) << 7
                             | ((switches >> SR_TILT) & 1) << 7;
@@ -509,6 +515,14 @@ int main() {
             update_termination(); // convenient time to read adc
             //printf("Saw non-sync code %02x\n", sync);
         }
+        if ((switches >> SR_P1_1) & 1) {
+          pattern_snakes_green(60, ws2812_counter);
+        } else if ((switches >> SR_P1_2) & 1) {
+          pattern_sparkle_yellow(60, ws2812_counter);
+        } else {
+          pattern_snakes_green_fast(60, ws2812_counter);
+        }
+        ws2812_counter += 1;
     }
     return 0;
 }

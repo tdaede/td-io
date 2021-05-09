@@ -13,10 +13,13 @@ pico_sdk_init()
 
 add_executable(td-io
         td-io.c
+	      ws2812.c
         )
 
+pico_generate_pio_header(td-io ${CMAKE_CURRENT_LIST_DIR}/ws2812.pio OUTPUT_DIR ${CMAKE_CURRENT_LIST_DIR}/generated)
+
 # Pull in our pico_stdlib which aggregates commonly used features
-target_link_libraries(td-io pico_stdlib hardware_adc)
+target_link_libraries(td-io pico_stdlib hardware_adc hardware_pio)
 
 # enable usb output, disable uart output
 pico_enable_stdio_usb(td-io 1)
