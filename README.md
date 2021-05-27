@@ -9,7 +9,7 @@ td-io is a JVS I/O board designed to adapt older JAMMA-compatible cabinets to th
 * High reliability, low heat generation and all solid state caps
 * Upgradeable firmware
 
-# Comparison
+# Comparison with other JVS I/O options
 
 |               | TD-IO   | Capcom I/O   | Sega 838   | Exa I/O |
 | ------------- | ------- | ------------ | ---------- | ------- |
@@ -40,7 +40,11 @@ An EDID EEPROM is also attached to the VGA port, to identify as a 31kHz monitor.
 
 # Audio
 
-A class-D audio amplifier provides high power speaker drive to the JAMMA edge. In addition, an Egret 2-style stereo connector provides amplified stereo speaker driving. A swich selects between stereo and mono mixdown. There is also an analog pot for volume control.
+TD-IO provides a class-D audio amplifier, which can drive both mono and stereo speakers in JAMMA cabinets. For mono cabinets, audio is simply provided via the JAMMA edge. For stereo support, the cabinet's speakers should be connected to the JST NH header provided on the I/O. The pinout of this header is directly compatible with the Egret 2, and adapters can be easily made for other cabinets, such as the Aero.
+
+The stereo/mono switch selects whether to mixdown the L/R channels to mono. It should be set to mono when using a mono cabinet via the JAMMA edge, and stereo when using a cabinet with the stereo header.
+
+The stereo support is not directly compatible with nonstandard Neo Geo style stereo over JAMMA, with a common ground. For these cabinets, either use the TD-IO in mono mode, or rewire the cabinet to connect directly to the stereo header. The left/right negative speaker outputs should not be tied together.
 
 # Power
 
@@ -54,9 +58,11 @@ The IO's electronics are protected from overvoltage and overcurrent by an automa
 
 The board features an on-board RP2040 microcontroller, whose firmware can be updated over USB for feature enhancements or compatibility fixes.
 
+To update the firmware, turn off power to the cabinet (if attached). Then, attach a USB cable to the micro USB connector. Hold down the white button on the RP2040 while plugging the USB connector into a PC. The TD-IO will then appear as a flash drive. Copy the firmware file (ending in .uf2) onto the drive. The TD-IO will then disconnect and be ready for use.
+
 # Analog Input
 
-The board features an unpopulated header exposing 3 3.3V level analog inputs, designed for potentiometers for analog joystick or racing games.
+The board features an unpopulated expansion header exposing 3 3.3V level analog inputs, designed for potentiometers for analog joystick or racing games. This feature is experimental and not yet implemented in the firmware.
 
 # Where to buy
 
