@@ -48,6 +48,15 @@ The stereo/mono switch selects whether to mixdown the L/R channels to mono. It s
 
 The stereo support is not directly compatible with nonstandard Neo Geo style stereo over JAMMA, with a common ground. For these cabinets, either use the TD-IO in mono mode, or rewire the cabinet to connect directly to the stereo header. The left/right negative speaker outputs should not be tied together.
 
+## Aero City adapter
+
+| JST NH H4P-SHF-AA | Molex MLX 50-84-2042 |
+| --- | --- |
+| 1   | 2   |
+| 2   | 3   |
+| 3   | 1   |
+| 4   | 4   |
+
 # Power
 
 An 8-pin JVS power connector forwards 12V and 5V from the cabinet to the JVS board. In addition, an on-board power supply generates 3.3V at up to 7A from the cabinet's 5V rail for systems that require it, such as Naomi.
