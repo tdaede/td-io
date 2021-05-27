@@ -1,3 +1,5 @@
+![td-io](/docs/photo.jpg)
+
 td-io is a JVS I/O board designed to adapt older JAMMA-compatible cabinets to the newer JVS standard, used by modern arcade hardware such as the Naomi and exA. It features a number of independent systems to translate signals, drive cabinet hardware, and power JVS games.
 
 # Features at a glance
