@@ -2,10 +2,10 @@ td-io is a JVS I/O board designed to adapt older JAMMA-compatible cabinets to th
 
 # Features at a glance
 
-* Chainable JVS I/O implementing a 2L12 panel and coin inputs
+* Chainable JVS I/O implementing a 2L12B panel and coin inputs
 * JVS to JAMMA video converter compatible with all monitors
 * Mono/stereo audio amplifier for driving JAMMA speakers
-* JVS power connector providing 3.3V via on-board converter
+* JVS power connector providing 3.3V via an on-board converter
 * High reliability, low heat generation and all solid state caps
 * Upgradeable firmware
 
