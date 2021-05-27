@@ -18,6 +18,7 @@ td-io is a JVS I/O board designed to adapt older JAMMA-compatible cabinets to th
 | Video         | ✔ | ✔ | ✔ | ❌ |
 | Audio amp     | ✔ | ✔ | ❌ | ❌ |
 | 3.3V power    | ✔ | ✔ | ❌ | ❌ |
+| Amplified stereo | ✔ | ❌ | ❌ | ❌ |
 
 # JVS inputs
 
