@@ -1,8 +1,27 @@
 td-io is a JVS I/O board designed to adapt older JAMMA-compatible cabinets to the newer JVS standard, used by modern arcade hardware such as the Naomi and exA. It features a number of independent systems to translate signals, drive cabinet hardware, and power JVS games.
 
+# Features at a glance
+
+* Chainable JVS I/O implementing a 2L12 panel and coin inputs
+* JVS to JAMMA video converter compatible with all monitors
+* Mono/stereo audio amplifier for driving JAMMA speakers
+* JVS power connector providing 3.3V via on-board converter
+* High reliability, low heat generation and all solid state caps
+* Upgradeable firmware
+
+# Comparison
+
+|               | TD-IO   | Capcom I/O   | Sega 838   | Exa I/O |
+| ------------- | ------- | ------------ | ---------- | ------- |
+| Lag (frames)  | 0       | 1            | 0          | 0       |
+| Chaining      | ✅ | ✅ | ✅ | ❌ |
+| Video         | ✅ | ✅ | ✅ | ❌ |
+| Audio amp     | ✅ | ✅ | ❌ | ❌ |
+| 3.3V power    | ✅ | ✅ | ❌ | ❌ |
+
 # JVS inputs
 
-The JVS I/O bus connects to the board via USB-style A and B connectors. Daisy chaining is supported. The I/O presents two players, each with a single joystick/lever and six buttons. Joystick and button 1-4 inputs are mapped to the JAMMA edge connector, and buttons 4-6 are mapped to a CPS2-style kick harness connector. Buttons are polled on request, ensuring microsecond-level latency.
+The JVS I/O bus connects to the board via USB-style A and B connectors. Daisy chaining is supported. The I/O presents two players, each with a single joystick/lever and six buttons. Joystick and button 1-4 inputs are mapped to the JAMMA edge connector, and buttons 4-6 are mapped to a CPS2-style kick harness connector. Buttons are polled synchronously, ensuring microsecond-level latency.
 
 Service, test, and tilt buttons are also supported. JAMMA's single service button is mapped to JVS player 1's service button.
 
@@ -10,9 +29,11 @@ The board also presents one or two coin slots, toggleable by a DIP switch. The b
 
 # Video
 
-The board amplifies JVS-level video (0.7Vp-p) to JAMMA appropriate levels, by applying a gain of 3. Amplification is DC coupled, so sources that swing negative will also swing negative on the output. Max input and output swing is -3.5 to 3.5V.
+The board maps JVS-level video (0.7Vp-p, AC or DC coupled) to JAMMA levels (0-3V, DC coupled). This is achieved via a DC restore step using the sync signal, followed by a fixed amplification. The DC coupled output allows maximum compatibility with monitors such as the Nanao MS8 and capture devices such as the Splitfire which require it.
 
 In addition, a sync combiner combines negative H/V sync to negative composite sync.
+
+No rate conversion is performed - the monitor must support the same scan rates as the JVS game.
 
 An EDID EEPROM is also attached to the VGA port, to identify as a 31kHz monitor.
 
@@ -22,7 +43,9 @@ A class-D audio amplifier provides high power speaker drive to the JAMMA edge. I
 
 # Power
 
-An 8-pin JVS power connector forwards 12V and 5V from the cabinet to the JVS board. In addition, an on-board power supply generates 3.3V at up to 8A from the cabinet's 5V rail for systems that require it, such as Naomi.
+An 8-pin JVS power connector forwards 12V and 5V from the cabinet to the JVS board. In addition, an on-board power supply generates 3.3V at up to 7A from the cabinet's 5V rail for systems that require it, such as Naomi.
+
+The cabinet's 5V power supply must still be adequate to power the 3.3V converter.
 
 The IO's electronics are protected from overvoltage and overcurrent by an automatically resetting protector.
 
