@@ -41,6 +41,7 @@ const uint8_t JVS_MAX_LEN = 253; // minus two for status and checksum
 
 // global state
 uint8_t our_address = 0;
+uint64_t last_process_coin = 0;
 // signed for underflow checks
 int16_t coin_count_p1 = 0;
 int16_t coin_count_p2 = 0;
@@ -178,7 +179,7 @@ void process_coin(uint32_t switches) {
             coin_count_p1 = 16383;
         }
     }
-        if ((switches >> SR_C2 & 1) && !prev_coin_p2) {
+    if ((switches >> SR_C2 & 1) && !prev_coin_p2) {
         coin_count_p2++;
         if (coin_count_p2 > 16383) {
             coin_count_p2 = 16383;
@@ -255,8 +256,14 @@ int main() {
     update_termination();
 
     while (true) {
-        uint8_t sync = uart_getc(uart0);
-        if (sync == 0xe0) {
+        const uint64_t now = time_us_64();
+        if ((now - last_process_coin) > 20000) {
+            uint32_t switches = read_switches();
+            process_coin(switches);
+            last_process_coin = now;
+        }
+
+        if (uart_is_readable(uart0) && uart_getc(uart0) == 0xe0) {
             uint8_t our_checksum = 0;
             uint8_t node_num = jvs_getc();
             if (!((node_num == 0xff) || ((our_address == node_num) && (our_address != 0)))) {
@@ -364,7 +371,10 @@ int main() {
                         msg_send[o] = JVS_REPORT_GOOD;
                         o++;
                         uint32_t switches = read_switches();
-                        process_coin(switches);
+                        if ((now - last_process_coin) > 12000) {
+                            process_coin(switches);
+                            last_process_coin = now;
+                        }
                         msg_send[o] = ((switches >> SR_TEST) & 1) << 7
                             | ((switches >> SR_TILT) & 1) << 7;
                         o++;
