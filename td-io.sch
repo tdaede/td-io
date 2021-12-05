@@ -3247,8 +3247,6 @@ Wire Wire Line
 	3150 4950 3500 4950
 NoConn ~ 15450 3950
 NoConn ~ 13800 3950
-Text Notes 19650 1100 0    50   ~ 0
-todo:\nmove stereo connector farther away from caps\ndifferent vga connector without text on it\nreposition connectors\n
 $Comp
 L Device:R_POT_Dual RV1
 U 1 1 602EE5E2
