@@ -513,7 +513,7 @@
       )
     )
     (symbol "TPA3138D2_1_1"
-      (pin no_connect line (at -2.54 -54.61 0) (length 2.54)
+      (pin input line (at -2.54 -54.61 0) (length 2.54)
         (name "NC" (effects (font (size 1.27 1.27))))
         (number "1" (effects (font (size 1.27 1.27))))
       )
