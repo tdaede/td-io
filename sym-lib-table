@@ -1,4 +1,5 @@
 (sym_lib_table
   (lib (name "td-io")(type "KiCad")(uri "${KIPRJMOD}/td-io.kicad_sym")(options "")(descr ""))
   (lib (name "MCU_RaspberryPi_and_Boards")(type "Legacy")(uri "${KIPRJMOD}/MCU_RaspberryPi_and_Boards.lib")(options "")(descr ""))
+  (lib (name "td-aoz2261")(type "KiCad")(uri "/home/thomas/sandbox/td-aoz2261/td-aoz2261.kicad_sym")(options "")(descr ""))
 )
