@@ -4781,12 +4781,7 @@
       (net 1 "GND") (pinfunction "PAD") (pintype "power_in") (zone_connect 2) (tstamp d0217e62-d7b6-4bc7-82f0-3b434ec77274))
     (pad "29" smd rect locked (at 0 0 270) (size 2.34 3.04) (layers "F.Cu" "F.Mask")
       (net 1 "GND") (pinfunction "PAD") (pintype "power_in") (zone_connect 2) (tstamp f880d718-dc74-4372-a284-9769de843727))
-    (model "${KISYS3DMOD}/Package_SO.3dshapes/HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP2.85x5.4mm.wrl"
-      (offset (xyz 0 0 0))
-      (scale (xyz 1 1 1))
-      (rotate (xyz 0 0 0))
-    )
-    (model "${KISYS3DMOD}/Package_SO.3dshapes/HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP3.4x9.5mm.step"
+    (model "${KICAD6_3DMODEL_DIR}/Package_SO.3dshapes/HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP3.4x9.5mm.wrl"
       (offset (xyz 0 0 0))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
@@ -5528,11 +5523,6 @@
       (net 195 "/JVS Power/SW") (pinfunction "1") (pintype "passive") (tstamp a8a8c6ae-e593-4e21-85ae-138a3b43964e))
     (pad "2" smd rect (at 2.725 0 90) (size 2.95 3.5) (layers "F.Cu" "F.Paste" "F.Mask")
       (net 106 "+3.3VP") (pinfunction "2") (pintype "passive") (tstamp bd600c59-217f-40f9-ba10-dc1da0d77b33))
-    (model "${KICAD6_3DMODEL_DIR}/Inductor_SMD.3dshapes/L_Bourns_SRP7028A_7.3x6.6mm.wrl"
-      (offset (xyz 0 0 0))
-      (scale (xyz 1 1 1))
-      (rotate (xyz 0 0 0))
-    )
   )
 
   (footprint "Capacitor_SMD:C_1210_3225Metric" (layer "F.Cu")
