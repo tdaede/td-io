@@ -1,0 +1,31 @@
+1.3
+---
+Removed discrete EDID eeprom
+Moved volume pot & fixed footprint
+Added compatibility with TPA3137D2 amp
+Removed logic power efuse
+Added discrete TVS and efuse protection to coil drivers and JVS sense pin
+Swapped 3.3V PSU to AOZ2262-11 based circuit
+Changed button pullups to +5V
+
+1.2
+---
+Changed negative voltage supply to MAX1720
+Fixed RCA jack footprint
+Added EDID emulation option
+Fixed ADA4861 disable pin
+Fixed PLIMIT pin on audio amp
+
+1.1
+---
+Added DC restore circuit
+Fixed audio amp filter wiring
+Added +5V efuse
+Reduced 3.3V feedback network impedance
+Dropped 2.5V sense enable GPIO
+
+
+1.0
+---
+
+First revision
