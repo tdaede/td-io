@@ -345,7 +345,8 @@ int main() {
                             memcpy(&msg_send[o], input_desc_1coin, sizeof(input_desc_1coin));
                             o += sizeof(input_desc_1coin);
                         } else {
-                            memcpy(&msg_send[o], input_desc_2coin, sizeof(input_desc_2coin));                        o += sizeof(input_desc_2coin);
+                            memcpy(&msg_send[o], input_desc_2coin, sizeof(input_desc_2coin));
+                            o += sizeof(input_desc_2coin);
                         }
                     } else if ((msg_length - i) >= 1 && message[i] == 0x15) {
                         i++;
@@ -376,7 +377,7 @@ int main() {
                             last_process_coin = now;
                         }
                         msg_send[o] = ((switches >> SR_TEST) & 1) << 7
-                            | ((switches >> SR_TILT) & 1) << 7;
+                            | ((switches >> SR_TILT) & 1) << 6;
                         o++;
                         //printf("Got switch request for %02x players\n", num_players);
                         for (int player = 0; player < num_players; player++) {
