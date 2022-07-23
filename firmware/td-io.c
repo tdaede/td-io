@@ -76,8 +76,10 @@ uint8_t prev_coin_p2 = 0;
 #define SR_TEST 30
 #define SR_TILT 29
 
-const uint8_t JVS_COMM_VER = 0x10;
+const uint8_t JVS_COMM_VER = 0x20;
 const char id_str[] = "TD;TD-IO;v1.1;https://github.com/tdaede/td-io";
+const char JVS_COMM_SUPPORT = 0x07;
+const uint JVS_COMM_SPEEDS[3] = { 115200, 1000000, 3000000 };
 
 const uint8_t input_desc_1coin[] = {
     0x01, 2, 12, 0,
@@ -119,7 +121,6 @@ void jvs_putc(uint8_t c) {
 
 void start_transmit() {
     gpio_put(PIN_JVS_RE, 1); // disable receive
-    busy_wait_us_32(200);    // 200us min for exa compat
     gpio_put(PIN_JVS_DE, 1); // enable transmitter
 }
 
@@ -150,14 +151,11 @@ void send_message(uint8_t status, uint8_t* m, uint8_t msg_len) {
 uint32_t read_switches() {
     uint32_t r;
     gpio_put(PIN_SR_SH, 1);
-    busy_wait_us(1);
     for (int i = 0; i < 32; i++) {
         r >>= 1;
         r |= (gpio_get(PIN_SR_DATA) ? 1 : 0) << 31;
         gpio_put(PIN_SR_CLK, 1);
-        busy_wait_us(1);
         gpio_put(PIN_SR_CLK, 0);
-        busy_wait_us(1);
     }
     gpio_put(PIN_SR_SH, 0);
     return ~r;
@@ -308,6 +306,18 @@ int main() {
                         } else {
                             printf("We are not currently last in the chain, skipping assignment\n");
                         }
+                    } else if ((msg_length - i) >= 2 && message[i] == 0xf2) {
+                        uint8_t method_code = message[i+1];
+                        i += 2;
+                        printf("Comm. method change request: %02x\n", method_code);
+
+                        if (method_code < (sizeof(JVS_COMM_SPEEDS)/sizeof(JVS_COMM_SPEEDS[0]))) {
+                            uart_init(uart0, JVS_COMM_SPEEDS[method_code]);
+                        }
+                        else {
+                            printf("incompatible JVS Comm. method!\n");
+                        }
+                        continue;
                     } else if ((msg_length - i) >= 1 && message[i] == 0x10) {
                         i++;
                         printf("Got ID code request\n");
@@ -490,6 +500,13 @@ int main() {
                             printf("Invalid coin counter slot\n");
                             msg_send[o] = JVS_REPORT_PARAMETER_INVALID;
                         }
+                        o++;
+                    } else if ((msg_length - i) >= 1 && message[i] == 0xd0) {
+                        i++;
+                        printf("Got comm support request\n");
+                        msg_send[o] = JVS_REPORT_GOOD;
+                        o++;
+                        msg_send[o] = JVS_COMM_SUPPORT;
                         o++;
                     } else {
                         printf("Unsupported message: N: %02x L: %02x M: ", node_num, msg_length);
