@@ -382,9 +382,20 @@ int main() {
                         msg_send[o] = JVS_REPORT_GOOD;
                         o++;
                         uint32_t switches = read_switches();
+
+                        /* With JVS' speeds, buttons can get bouncy. Games generally only process
+                         * inputs once per frame, but coin and service logic can happen between game
+                         * frames. We limit coin processing at a rate well above bounciness but less
+                         * than 1/60th of a second. */
+                        static uint8_t service_pressed = 0;
                         if ((now - last_process_coin) > 12000) {
                             process_coin(switches);
                             last_process_coin = now;
+                            service_pressed = (switches >> SR_SERVICE) & 1;
+                        }
+                        else {
+                            switches = (switches & ~(1 << SR_SERVICE)
+                                       | (service_pressed << SR_SERVICE));
                         }
                         msg_send[o] = ((switches >> SR_TEST) & 1) << 7
                             | ((switches >> SR_TILT) & 1) << 6;
