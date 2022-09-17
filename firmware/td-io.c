@@ -3,10 +3,6 @@
 #include "hardware/adc.h"
 #include <string.h>
 
-// Start buffi pins
-const uint PIN_BTN_TEST = 22;
-// end
-
 const uint PIN_JVS_RE = 2;
 const uint PIN_JVS_DE = 3;
 
@@ -18,6 +14,22 @@ const uint PIN_JVS_SENSE_IN_LOW = 12;
 
 const uint PIN_LED_ENUMERATED = PICO_DEFAULT_LED_PIN;
 const uint PIN_DIP1 = 17;
+
+// New pins for direct inputs.
+const uint PIN_BTN_TEST = 22;
+const uint PIN_BTN_SERVICE = 0;
+const uint PIN_BTN_COIN = 0;
+const uint PIN_BTN_START = 0;
+const uint PIN_JOY_UP = 0;
+const uint PIN_JOY_DOWN = 0;
+const uint PIN_JOY_LEFT = 0;
+const uint PIN_JOY_RIGHT = 0;
+const uint PIN_BTN_1 = 0;
+const uint PIN_BTN_2 = 0;
+const uint PIN_BTN_3 = 0;
+const uint PIN_BTN_4 = 0;
+const uint PIN_BTN_5 = 0;
+const uint PIN_BTN_6 = 0;
 
 const uint16_t JVS_TERMINATION_THRESHOLD = (uint16_t)(3.75/2.0/3.3*4096);
 const uint16_t JVS_0V_THRESHOLD = (uint16_t)(1.25/2.0/3.3*4096);
