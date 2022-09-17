@@ -153,8 +153,22 @@ void send_message(uint8_t status, uint8_t* m, uint8_t msg_len) {
 }
 
 uint32_t read_switches() {
-    // TODO: Change this to use direct inputs.
-    return 0;
+    uint32_t switches = 0;
+    switches |= (!gpio_get(PIN_BTN_TEST)) << SR_TEST;
+    switches |= (!gpio_get(PIN_BTN_COIN)) << SR_C1;
+    switches |= (!gpio_get(PIN_BTN_SERVICE)) << SR_SERVICE;
+    switches |= (!gpio_get(PIN_BTN_START)) << SR_P1_START;
+    switches |= (!gpio_get(PIN_JOY_UP)) << SR_P1_UP;
+    switches |= (!gpio_get(PIN_JOY_DOWN)) << SR_P1_DOWN;
+    switches |= (!gpio_get(PIN_JOY_LEFT)) << SR_P1_LEFT;
+    switches |= (!gpio_get(PIN_JOY_RIGHT)) << SR_P1_RIGHT;
+    switches |= (!gpio_get(PIN_BTN_1)) << SR_P1_1;
+    switches |= (!gpio_get(PIN_BTN_2)) << SR_P1_2;
+    switches |= (!gpio_get(PIN_BTN_3)) << SR_P1_3;
+    switches |= (!gpio_get(PIN_BTN_4)) << SR_P1_4;
+    switches |= (!gpio_get(PIN_BTN_5)) << SR_P1_5;
+    switches |= (!gpio_get(PIN_BTN_6)) << SR_P1_6;
+    return switches;
 }
 
 void update_termination() {
