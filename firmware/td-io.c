@@ -1,3 +1,5 @@
+// Adapted from the https://github.com/tdaede/td-io firmware but scoped down.
+
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "hardware/adc.h"
@@ -82,7 +84,7 @@ uint8_t prev_coin_p2 = 0;
 #define SR_TILT 29
 
 const uint8_t JVS_COMM_VER = 0x10;
-const char id_str[] = "TD;TD-IO;v1.1;https://github.com/tdaede/td-io";
+const char id_str[] = "BUFFI;BuffiJVS;v0.1;https://github.com/buffis";
 
 const uint8_t input_desc_1coin[] = {
     0x01, 2, 12, 0,
