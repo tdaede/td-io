@@ -3,6 +3,10 @@
 #include "hardware/adc.h"
 #include <string.h>
 
+// Start buffi pins
+const uint PIN_BTN_TEST = 22;
+// end
+
 const uint PIN_JVS_RE = 2;
 const uint PIN_JVS_DE = 3;
 
@@ -148,19 +152,7 @@ void send_message(uint8_t status, uint8_t* m, uint8_t msg_len) {
 }
 
 uint32_t read_switches() {
-    uint32_t r;
-    gpio_put(PIN_SR_SH, 1);
-    busy_wait_us(1);
-    for (int i = 0; i < 32; i++) {
-        r >>= 1;
-        r |= (gpio_get(PIN_SR_DATA) ? 1 : 0) << 31;
-        gpio_put(PIN_SR_CLK, 1);
-        busy_wait_us(1);
-        gpio_put(PIN_SR_CLK, 0);
-        busy_wait_us(1);
-    }
-    gpio_put(PIN_SR_SH, 0);
-    return ~r;
+    return 0;
 }
 
 void update_termination() {
@@ -252,6 +244,11 @@ int main() {
     gpio_init(PIN_DIP1);
     gpio_set_dir(PIN_DIP1, GPIO_IN);
     gpio_pull_up(PIN_DIP1);
+
+    // dank shit
+    gpio_init(PIN_BTN_TEST);
+    gpio_set_dir(PIN_BTN_TEST, GPIO_IN);
+    gpio_pull_up(PIN_BTN_TEST);
 
     update_termination();
 
@@ -375,8 +372,8 @@ int main() {
                             process_coin(switches);
                             last_process_coin = now;
                         }
-                        msg_send[o] = ((switches >> SR_TEST) & 1) << 7
-                            | ((switches >> SR_TILT) & 1) << 7;
+                        // Cool stuff here.
+                        msg_send[o] = !gpio_get(PIN_BTN_TEST) << 7;
                         o++;
                         //printf("Got switch request for %02x players\n", num_players);
                         for (int player = 0; player < num_players; player++) {
