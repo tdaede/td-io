@@ -1,0 +1,6 @@
+Changes from base td-io design:
+# September 2022
+- Removed everything unrelated to player1 JVS controls from schematic.
+- Removed shift registers, to instead use buttons directly connected to pico for controls.
+- Remade board from scratch.
+- Modified firmware to no longer use shift registers for input.
