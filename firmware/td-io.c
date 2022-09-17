@@ -13,23 +13,23 @@ const uint PIN_JVS_SENSE_IN_HIGH = 11;
 const uint PIN_JVS_SENSE_IN_LOW = 12;
 
 const uint PIN_LED_ENUMERATED = PICO_DEFAULT_LED_PIN;
-const uint PIN_DIP1 = 17;
+const uint PIN_DIP1 = 26;
 
 // New pins for direct inputs.
-const uint PIN_BTN_TEST = 22;
-const uint PIN_BTN_SERVICE = 0;
-const uint PIN_BTN_COIN = 0;
-const uint PIN_BTN_START = 0;
-const uint PIN_JOY_UP = 0;
-const uint PIN_JOY_DOWN = 0;
-const uint PIN_JOY_LEFT = 0;
-const uint PIN_JOY_RIGHT = 0;
-const uint PIN_BTN_1 = 0;
-const uint PIN_BTN_2 = 0;
-const uint PIN_BTN_3 = 0;
-const uint PIN_BTN_4 = 0;
-const uint PIN_BTN_5 = 0;
-const uint PIN_BTN_6 = 0;
+const uint PIN_BTN_TEST = 10;
+const uint PIN_BTN_SERVICE = 14;
+const uint PIN_BTN_COIN = 27;
+const uint PIN_BTN_START = 28;
+const uint PIN_JOY_UP = 6;
+const uint PIN_JOY_DOWN = 7;
+const uint PIN_JOY_LEFT = 8;
+const uint PIN_JOY_RIGHT = 9;
+const uint PIN_BTN_1 = 17;
+const uint PIN_BTN_2 = 18;
+const uint PIN_BTN_3 = 19;
+const uint PIN_BTN_4 = 20;
+const uint PIN_BTN_5 = 21;
+const uint PIN_BTN_6 = 22;
 
 const uint16_t JVS_TERMINATION_THRESHOLD = (uint16_t)(3.75/2.0/3.3*4096);
 const uint16_t JVS_0V_THRESHOLD = (uint16_t)(1.25/2.0/3.3*4096);
@@ -216,10 +216,49 @@ int main() {
     gpio_set_dir(PIN_DIP1, GPIO_IN);
     gpio_pull_up(PIN_DIP1);
 
-    // dank shit
+    // Control inputs
     gpio_init(PIN_BTN_TEST);
+    gpio_init(PIN_BTN_SERVICE);
+    gpio_init(PIN_BTN_COIN);
+    gpio_init(PIN_BTN_START);
+    gpio_init(PIN_JOY_UP);
+    gpio_init(PIN_JOY_DOWN);
+    gpio_init(PIN_JOY_LEFT);
+    gpio_init(PIN_JOY_RIGHT);
+    gpio_init(PIN_BTN_1);
+    gpio_init(PIN_BTN_2);
+    gpio_init(PIN_BTN_3);
+    gpio_init(PIN_BTN_4);
+    gpio_init(PIN_BTN_5);
+    gpio_init(PIN_BTN_6);
     gpio_set_dir(PIN_BTN_TEST, GPIO_IN);
+    gpio_set_dir(PIN_BTN_SERVICE, GPIO_IN);
+    gpio_set_dir(PIN_BTN_COIN, GPIO_IN);
+    gpio_set_dir(PIN_BTN_START, GPIO_IN);
+    gpio_set_dir(PIN_JOY_UP, GPIO_IN);
+    gpio_set_dir(PIN_JOY_DOWN, GPIO_IN);
+    gpio_set_dir(PIN_JOY_LEFT, GPIO_IN);
+    gpio_set_dir(PIN_JOY_RIGHT, GPIO_IN);
+    gpio_set_dir(PIN_BTN_1, GPIO_IN);
+    gpio_set_dir(PIN_BTN_2, GPIO_IN);
+    gpio_set_dir(PIN_BTN_3, GPIO_IN);
+    gpio_set_dir(PIN_BTN_4, GPIO_IN);
+    gpio_set_dir(PIN_BTN_5, GPIO_IN);
+    gpio_set_dir(PIN_BTN_6, GPIO_IN);
     gpio_pull_up(PIN_BTN_TEST);
+    gpio_pull_up(PIN_BTN_SERVICE);
+    gpio_pull_up(PIN_BTN_COIN);
+    gpio_pull_up(PIN_BTN_START);
+    gpio_pull_up(PIN_JOY_UP);
+    gpio_pull_up(PIN_JOY_DOWN);
+    gpio_pull_up(PIN_JOY_LEFT);
+    gpio_pull_up(PIN_JOY_RIGHT);
+    gpio_pull_up(PIN_BTN_1);
+    gpio_pull_up(PIN_BTN_2);
+    gpio_pull_up(PIN_BTN_3);
+    gpio_pull_up(PIN_BTN_4);
+    gpio_pull_up(PIN_BTN_5);
+    gpio_pull_up(PIN_BTN_6);
 
     update_termination();
 
