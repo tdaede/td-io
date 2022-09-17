@@ -11,8 +11,6 @@ const uint PIN_JVS_DE = 3;
 const uint PIN_JVS_SENSE_0V = 13;
 
 const uint PIN_JVS_TERMINATION = 15;
-const uint PIN_JVS_SENSE_IN_HIGH = 11;
-const uint PIN_JVS_SENSE_IN_LOW = 12;
 
 const uint PIN_LED_ENUMERATED = PICO_DEFAULT_LED_PIN;
 const uint PIN_DIP1 = 26;
@@ -32,9 +30,6 @@ const uint PIN_BTN_3 = 19;
 const uint PIN_BTN_4 = 20;
 const uint PIN_BTN_5 = 21;
 const uint PIN_BTN_6 = 22;
-
-const uint16_t JVS_TERMINATION_THRESHOLD = (uint16_t)(3.75/2.0/3.3*4096);
-const uint16_t JVS_0V_THRESHOLD = (uint16_t)(1.25/2.0/3.3*4096);
 
 const uint8_t JVS_STATUS_GOOD = 1;
 const uint8_t JVS_STATUS_UNKNOWN_COMMAND = 2;
@@ -173,14 +168,6 @@ uint32_t read_switches() {
     return switches;
 }
 
-void update_termination() {
-    if (gpio_get(PIN_JVS_SENSE_IN_HIGH)) {
-        gpio_put(PIN_JVS_TERMINATION, 0);
-    } else {
-        gpio_put(PIN_JVS_TERMINATION, 1);
-    }
-}
-
 // call periodically with switch read to check level changes of coin input
 void process_coin(uint32_t switches) {
     if ((switches >> SR_C1 & 1) && !prev_coin_p1) {
@@ -217,12 +204,6 @@ int main() {
     gpio_init(PIN_JVS_TERMINATION);
     gpio_put(PIN_JVS_TERMINATION, 1); // disable termination by default
     gpio_set_dir(PIN_JVS_TERMINATION, GPIO_OUT);
-    gpio_init(PIN_JVS_SENSE_IN_LOW);
-    gpio_set_dir(PIN_JVS_SENSE_IN_LOW, GPIO_IN);
-    gpio_pull_up(PIN_JVS_SENSE_IN_LOW);
-    gpio_init(PIN_JVS_SENSE_IN_HIGH);
-    gpio_set_dir(PIN_JVS_SENSE_IN_HIGH, GPIO_IN);
-    gpio_pull_up(PIN_JVS_SENSE_IN_HIGH);
 
     // ui
     gpio_init(PIN_LED_ENUMERATED);
@@ -276,7 +257,7 @@ int main() {
     gpio_pull_up(PIN_BTN_5);
     gpio_pull_up(PIN_BTN_6);
 
-    update_termination();
+    gpio_put(PIN_JVS_TERMINATION, 0);
 
     while (true) {
         const uint64_t now = time_us_64();
@@ -319,9 +300,7 @@ int main() {
                         uint8_t node_id = message[i+1];
                         i += 2;
                         printf("Assign node id N: %02x\n", node_id);
-                        if ((our_address == 0)
-                            && (gpio_get(PIN_JVS_SENSE_IN_HIGH)
-                                || !gpio_get(PIN_JVS_SENSE_IN_LOW))) {
+                        if (our_address == 0) {
                             printf("Assigning our address\n");
                             our_address = node_id;
                             msg_send[o] = JVS_REPORT_GOOD;
@@ -537,10 +516,6 @@ int main() {
                 status = JVS_STATUS_CHECKSUM_ERROR;
                 send_message(status, msg_send, 0);
             }
-        } else {
-            // note because of disabling the rx, we always read a 00 byte after sending here
-            update_termination(); // convenient time to read adc
-            //printf("Saw non-sync code %02x\n", sync);
         }
     }
     return 0;
