@@ -10,25 +10,14 @@ const uint PIN_BTN_TEST = 22;
 const uint PIN_JVS_RE = 2;
 const uint PIN_JVS_DE = 3;
 
-const uint PIN_JVS_SENSE_2_5V = 14;
 const uint PIN_JVS_SENSE_0V = 13;
 
 const uint PIN_JVS_TERMINATION = 15;
 const uint PIN_JVS_SENSE_IN_HIGH = 11;
 const uint PIN_JVS_SENSE_IN_LOW = 12;
 
-const uint PIN_SR_DATA = 20;
-const uint PIN_SR_CLK = 18;
-const uint PIN_SR_SH = 21;
-
-const uint PIN_METER1 = 8;
-const uint PIN_METER2 = 7;
-const uint PIN_LOCKOUT1 = 10;
-const uint PIN_LOCKOUT2 = 9;
-
 const uint PIN_LED_ENUMERATED = PICO_DEFAULT_LED_PIN;
 const uint PIN_DIP1 = 17;
-const uint PIN_DIP2 = 16;
 
 const uint16_t JVS_TERMINATION_THRESHOLD = (uint16_t)(3.75/2.0/3.3*4096);
 const uint16_t JVS_0V_THRESHOLD = (uint16_t)(1.25/2.0/3.3*4096);
@@ -152,6 +141,7 @@ void send_message(uint8_t status, uint8_t* m, uint8_t msg_len) {
 }
 
 uint32_t read_switches() {
+    // TODO: Change this to use direct inputs.
     return 0;
 }
 
@@ -179,10 +169,6 @@ void process_coin(uint32_t switches) {
     }
     prev_coin_p1 = switches >> SR_C1 & 1;
     prev_coin_p2 = switches >> SR_C2 & 1;
-    gpio_put(PIN_METER1, prev_coin_p1);
-    gpio_put(PIN_METER2, prev_coin_p2);
-    gpio_put(PIN_LOCKOUT1, coin_count_p1 >= 16383);
-    gpio_put(PIN_LOCKOUT2, coin_count_p2 >= 16383);
 }
 
 int main() {
@@ -197,9 +183,6 @@ int main() {
     gpio_init(PIN_JVS_DE);
     gpio_put(PIN_JVS_DE, 0); //disable transmitter
     gpio_set_dir(PIN_JVS_DE, GPIO_OUT);
-    gpio_init(PIN_JVS_SENSE_2_5V);
-    gpio_put(PIN_JVS_SENSE_2_5V, 1); // always appear present
-    gpio_set_dir(PIN_JVS_SENSE_2_5V, GPIO_OUT);
     gpio_init(PIN_JVS_SENSE_0V);
     gpio_put(PIN_JVS_SENSE_0V, 0);
     gpio_set_dir(PIN_JVS_SENSE_0V, GPIO_OUT);
@@ -212,30 +195,6 @@ int main() {
     gpio_init(PIN_JVS_SENSE_IN_HIGH);
     gpio_set_dir(PIN_JVS_SENSE_IN_HIGH, GPIO_IN);
     gpio_pull_up(PIN_JVS_SENSE_IN_HIGH);
-
-    // sr
-    gpio_init(PIN_SR_DATA);
-    gpio_set_dir(PIN_SR_DATA, GPIO_IN);
-    gpio_init(PIN_SR_CLK);
-    gpio_put(PIN_SR_CLK, 0);
-    gpio_set_dir(PIN_SR_CLK, GPIO_OUT);
-    gpio_init(PIN_SR_SH);
-    gpio_put(PIN_SR_SH, 0);
-    gpio_set_dir(PIN_SR_SH, GPIO_OUT);
-
-    // coin/lockout drivers
-    gpio_init(PIN_METER1);
-    gpio_put(PIN_METER1, 0);
-    gpio_set_dir(PIN_METER1, GPIO_OUT);
-    gpio_init(PIN_METER2);
-    gpio_put(PIN_METER2, 0);
-    gpio_set_dir(PIN_METER2, GPIO_OUT);
-    gpio_init(PIN_LOCKOUT1);
-    gpio_put(PIN_LOCKOUT1, 0);
-    gpio_set_dir(PIN_LOCKOUT1, GPIO_OUT);
-    gpio_init(PIN_LOCKOUT2);
-    gpio_put(PIN_LOCKOUT2, 0);
-    gpio_set_dir(PIN_LOCKOUT2, GPIO_OUT);
 
     // ui
     gpio_init(PIN_LED_ENUMERATED);
