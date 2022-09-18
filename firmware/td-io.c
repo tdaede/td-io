@@ -10,10 +10,12 @@ const uint PIN_JVS_DE = 3;
 
 const uint PIN_JVS_SENSE_0V = 13;
 
-const uint PIN_JVS_TERMINATION = 15;
+const uint PIN_JVS_TERMINATION = 15; // TODO: Remove.
 
 const uint PIN_LED_ENUMERATED = PICO_DEFAULT_LED_PIN;
-const uint PIN_DIP1 = 26;
+const uint PIN_DIP1 = 11;
+const uint PIN_DIP2 = 12;
+const uint PIN_DIP3 = 15;
 
 // New pins for direct inputs.
 const uint PIN_BTN_TEST = 10;
