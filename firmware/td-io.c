@@ -17,8 +17,8 @@ const uint PIN_SR_DATA = 20;
 const uint PIN_SR_CLK = 18;
 const uint PIN_SR_SH = 21;
 
-const uint PIN_METER1 = 8;
-const uint PIN_METER2 = 7;
+const uint PIN_METER1 = 7;
+const uint PIN_METER2 = 8;
 const uint PIN_LOCKOUT1 = 10;
 const uint PIN_LOCKOUT2 = 9;
 
@@ -47,6 +47,13 @@ int16_t coin_count_p1 = 0;
 int16_t coin_count_p2 = 0;
 uint8_t prev_coin_p1 = 0;
 uint8_t prev_coin_p2 = 0;
+
+/* Coins are polled between 12ms and 20ms as a min and max time. This value was picked to guarantee
+ * a pulse of at least 120ms. The lowest rated coin meters are 10 counts/second. In the case of a
+ * coin jam, the maximum pulse will be 200ms. */
+const uint8_t METER_TIMEOUT = 11;
+uint8_t meter_timeout_p1 = 0;
+uint8_t meter_timeout_p2 = 0;
 
 #define SR_P1_3 7
 #define SR_P2_3 6
@@ -178,17 +185,24 @@ void process_coin(uint32_t switches) {
         if (coin_count_p1 > 16383) {
             coin_count_p1 = 16383;
         }
+        meter_timeout_p1 = METER_TIMEOUT;
     }
     if ((switches >> SR_C2 & 1) && !prev_coin_p2) {
         coin_count_p2++;
         if (coin_count_p2 > 16383) {
             coin_count_p2 = 16383;
         }
+        meter_timeout_p2 = METER_TIMEOUT;
     }
     prev_coin_p1 = switches >> SR_C1 & 1;
     prev_coin_p2 = switches >> SR_C2 & 1;
-    gpio_put(PIN_METER1, prev_coin_p1);
-    gpio_put(PIN_METER2, prev_coin_p2);
+
+    if (meter_timeout_p1) meter_timeout_p1--;
+    gpio_put(PIN_METER1, meter_timeout_p1 > 0);
+
+    if (meter_timeout_p2) meter_timeout_p2--;
+    gpio_put(PIN_METER2, meter_timeout_p2 > 0);
+
     gpio_put(PIN_LOCKOUT1, coin_count_p1 >= 16383);
     gpio_put(PIN_LOCKOUT2, coin_count_p2 >= 16383);
 }
