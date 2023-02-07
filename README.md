@@ -16,7 +16,7 @@ td-io is a JVS I/O board designed to adapt older JAMMA-compatible cabinets to th
 |               | TD-IO   | Capcom I/O   | Sega 838   | Exa I/O |
 | ------------- | ------- | ------------ | ---------- | ------- |
 | Lag (frames)  | 0       | 1            | 0          | 0       |
-| Chaining      | ✔ | ❌ | ✔ | ❌ |
+| Chaining      | ✔ | ❌ | ✔ | ✔ |
 | Video         | ✔ | ✔ | ✔ | ❌ |
 | Audio amp     | ✔ | ✔ | ❌ | ❌ |
 | 3.3V power    | ✔ | ✔ | ❌ | ❌ |
