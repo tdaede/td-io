@@ -9,14 +9,16 @@ project(td-io)
 # initialize the Raspberry Pi Pico SDK
 pico_sdk_init()
 
+add_subdirectory(third_party/pico_i2c_slave/i2c_slave)
+
 # rest of your project
 
 add_executable(td-io
-        td-io.c
+        td-io.c edid.c
         )
 
 # Pull in our pico_stdlib which aggregates commonly used features
-target_link_libraries(td-io pico_stdlib hardware_adc)
+target_link_libraries(td-io pico_stdlib hardware_adc i2c_slave)
 
 # enable usb output, disable uart output
 pico_enable_stdio_usb(td-io 1)

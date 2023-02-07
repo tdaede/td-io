@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "hardware/adc.h"
+#include "edid.h"
 #include <string.h>
 
 const uint PIN_JVS_RE = 2;
@@ -264,6 +265,9 @@ int main() {
     gpio_init(PIN_DIP1);
     gpio_set_dir(PIN_DIP1, GPIO_IN);
     gpio_pull_up(PIN_DIP1);
+
+    // edid emulation
+    edid_init();
 
     update_termination();
 
