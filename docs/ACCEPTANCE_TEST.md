@@ -16,8 +16,8 @@ Once programmed, the white button must be held when plugging in the USB cable to
 
 # Functionality test
 
-4. Attach a JVS host to the JVS connectors. Ensure that the green LED illuminates once the host initializes JVS.
+5. Attach a JVS host to the JVS connectors. Ensure that the green LED illuminates once the host initializes JVS.
 
-5. Attach a sound source to the RCA connectors. Ensure that the sound is audible via either the JAMMA connector or via the stereo header.
+6. Attach a sound source to the RCA connectors. Ensure that the sound is audible via either the JAMMA connector or via the stereo header.
 
-6. Attach a video source to the VGA connector. Ensure that video appears via the supergun.
+7. Attach a video source to the VGA connector. Ensure that video appears via the supergun.
