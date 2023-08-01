@@ -39,6 +39,7 @@ const uint8_t JVS_REPORT_GOOD = 1;
 const uint8_t JVS_REPORT_PARAMETER_INVALID = 3;
 
 const uint8_t JVS_MAX_LEN = 253; // minus two for status and checksum
+#define JVS_OUTPUT_BUF_LEN 512 // a few bytes to spare for easier overflow checking
 
 // global state
 uint8_t our_address = 0;
@@ -271,6 +272,10 @@ int main() {
 
     update_termination();
 
+    uint8_t prev_msg_send[JVS_OUTPUT_BUF_LEN];
+    uint8_t prev_msg_size = 0;
+    uint8_t prev_status = 0;
+
     while (true) {
         const uint64_t now = time_us_64();
         if ((now - last_process_coin) > 20000) {
@@ -295,7 +300,7 @@ int main() {
                 our_checksum += c;
                 message[i] = c;
             }
-            uint8_t msg_send[256*2]; // a few bytes to spare for easier overflow checking
+            uint8_t msg_send[JVS_OUTPUT_BUF_LEN];
             int o = 0;
             uint8_t status = JVS_STATUS_GOOD;
             uint8_t their_checksum = jvs_getc();
@@ -478,6 +483,10 @@ int main() {
                             }
                             o += 2;
                         }
+                    } else if ((msg_length - i) >= 1 && message[i] == 0x2f) {
+                        printf("JVS re-transmit request!\n");
+                        send_message(prev_status, prev_msg_send, prev_msg_size);
+                        break;
                     } else if ((msg_length - i) >= 4 && message[i] == 0x30) {
                         uint8_t slot = message[i+1];
                         uint16_t amount = (message[i+2] << 8) + message[i+3];
@@ -555,6 +564,9 @@ int main() {
                 fflush(stdout);
                 if ((o > 0) || (status != JVS_STATUS_GOOD)) {
                     send_message(status, msg_send, o);
+                    memcpy(prev_msg_send, msg_send, o);
+                    prev_status = status;
+                    prev_msg_size = o;
                 }
             } else {
                 printf("Checksum mismatch: theirs: %02x ours: %02x\n", their_checksum, our_checksum);
