@@ -483,6 +483,22 @@ int main() {
                             }
                             o += 2;
                         }
+                    } else if ((msg_length - i) >= 2 && message[i] == 0x22) {
+                        int channels = message[i+1];
+                        i += 2;
+                        if (o + channels*2 >= JVS_MAX_LEN) {
+                            printf("JVS response overflow!\n");
+                            status = JVS_STATUS_OVERFLOW;
+                            break;
+                        }
+                        msg_send[o] = JVS_REPORT_GOOD;
+                        o++;
+                        for (int channel = 0; channel < channels; channel++) {
+                            // analog input currently not supported
+                            msg_send[o] = 0x80;
+                            msg_send[o+1] = 0x00;
+                            o += 2;
+                        }
                     } else if ((msg_length - i) >= 1 && message[i] == 0x2f) {
                         printf("JVS re-transmit request!\n");
                         send_message(prev_status, prev_msg_send, prev_msg_size);
