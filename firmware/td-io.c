@@ -49,6 +49,8 @@ int16_t coin_count_p1 = 0;
 int16_t coin_count_p2 = 0;
 uint8_t prev_coin_p1 = 0;
 uint8_t prev_coin_p2 = 0;
+// current JVS comm method
+uint8_t jvs_comm_method = 0;
 
 /* Coins are polled between 12ms and 20ms as a min and max time. This value was picked to guarantee
  * a pulse of at least 120ms. The lowest rated coin meters are 10 counts/second. In the case of a
@@ -130,6 +132,10 @@ void jvs_putc(uint8_t c) {
 
 void start_transmit() {
     gpio_put(PIN_JVS_RE, 1); // disable receive
+    if (jvs_comm_method == 0) {
+        // un-upgraded jvs needs at least 100us here
+        busy_wait_us_32(200);    // 200us min for exa compat
+    }
     gpio_put(PIN_JVS_DE, 1); // enable transmitter
 }
 
@@ -336,6 +342,7 @@ int main() {
 
                         if (method_code < (sizeof(JVS_COMM_SPEEDS)/sizeof(JVS_COMM_SPEEDS[0]))) {
                             uart_init(uart0, JVS_COMM_SPEEDS[method_code]);
+                            jvs_comm_method = method_code;
                         }
                         else {
                             printf("incompatible JVS Comm. method!\n");
